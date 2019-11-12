@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusAPI", "Microservices\BusAPI.csproj", "{CFA0E797-B172-4CF8-B906-4C68554DA3B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainAPI", "TrainAPI\TrainAPI.csproj", "{3B203E15-2FD5-45C1-93E3-A0D097E58D1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaneAPI", "PlaneAPI\PlaneAPI.csproj", "{E6D5497B-AC6B-46AB-B319-008D8B1FBEB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFA0E797-B172-4CF8-B906-4C68554DA3B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFA0E797-B172-4CF8-B906-4C68554DA3B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFA0E797-B172-4CF8-B906-4C68554DA3B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFA0E797-B172-4CF8-B906-4C68554DA3B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B203E15-2FD5-45C1-93E3-A0D097E58D1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B203E15-2FD5-45C1-93E3-A0D097E58D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B203E15-2FD5-45C1-93E3-A0D097E58D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B203E15-2FD5-45C1-93E3-A0D097E58D1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6D5497B-AC6B-46AB-B319-008D8B1FBEB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6D5497B-AC6B-46AB-B319-008D8B1FBEB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6D5497B-AC6B-46AB-B319-008D8B1FBEB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6D5497B-AC6B-46AB-B319-008D8B1FBEB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {629AA963-463C-47B7-ACB8-255F8651C604}
+	EndGlobalSection
+EndGlobal
