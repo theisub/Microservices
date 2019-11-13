@@ -1,0 +1,29 @@
+{
+  "routes": [
+    {
+      "endpoint": "/buses",
+      "destination": {
+        "Path": "https://localhost:44331/api/",
+        "requiresAuthentification": "false"
+      }
+    },
+    {
+      "endpoint": "/trains",
+      "destination": {
+        "Path": "https://localhost:44365/api/",
+        "requiresAuthentification": "false"
+      }
+    },
+    {
+      "endpoint": "/planes",
+      "destination": {
+        "Path": "https://localhost:44361/api/",
+        "requiresAuthentification": "false"
+      }
+    }
+  ],
+  "authentificationService": {
+    "uri": "http://localhost:8080/api/auth/"
+  }
+
+}
