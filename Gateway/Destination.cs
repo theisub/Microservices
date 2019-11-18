@@ -35,6 +35,7 @@ namespace Gateway
         public async Task<HttpResponseMessage> SendRequest(HttpRequest request)
         {
             string requestContent;
+
             using (Stream receiveStream = request.Body)
             {
                 using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
@@ -54,6 +55,7 @@ namespace Gateway
 
         private string CreateDestinationUri(HttpRequest request)
         {
+            /*
             string requestPath = request.Path.ToString();
             string queryString = request.QueryString.ToString();
 
@@ -70,7 +72,18 @@ namespace Gateway
             //return "https://localhost:44365/api/trains/3";
         
             return Path + endpoint + queryString;
+            */
+            string requestPath = request.Path.ToString();
+            string queryString = request.QueryString.ToString();
 
+            string endpoint = "";
+            string[] endpointSplit = requestPath.Substring(1).Split('/');
+
+            if (endpointSplit.Length > 1)
+                endpoint = endpointSplit[1];
+
+
+            return Path + endpoint + queryString;
         }
 
     }
