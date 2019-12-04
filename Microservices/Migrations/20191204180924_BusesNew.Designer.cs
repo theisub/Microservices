@@ -3,14 +3,16 @@ using BusAPI.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BusAPI.Migrations
 {
     [DbContext(typeof(BusDbContext))]
-    partial class BusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191204180924_BusesNew")]
+    partial class BusesNew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,9 +47,6 @@ namespace BusAPI.Migrations
 
                     b.Property<bool>("Transit")
                         .HasColumnType("bit");
-
-                    b.Property<int>("TravelTime")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

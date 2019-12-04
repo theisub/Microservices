@@ -30,6 +30,135 @@ namespace GatewayAPI.BusesClient
             return resultBody;
         }
 
+
+        public async Task<List<Bus>> GetAllBusesByCompany(string companyName)
+        {
+            HttpResponseMessage response;
+
+            string url = $"/api/buses/companies/{companyName}";
+            
+            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                response = await SendRequestAsync(request);
+
+            List<Bus> result;
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<List<Bus>>(resultContent);
+            }
+            else
+            {
+                throw new Exception("GetAllBusesByCompany failed to get");
+            }
+
+            return result;
+        }
+
+        public async Task<List<Bus>> GetAllBusesByPrice(long? minPrice = null, long? maxPrice = null)
+        {
+            HttpResponseMessage response;
+            string url = $"/api/buses/pricerange?minPrice={minPrice}&maxPrice={maxPrice}";
+            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                response = await SendRequestAsync(request);
+
+            List<Bus> result;
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<List<Bus>>(resultContent);
+            }
+            else
+            {
+                throw new Exception("GetAllBusesByCompany failed to get");
+            }
+
+            return result;
+
+        }
+
+
+        public async Task<List<Bus>> GetAllBusesByRoute(string inCity, string outCity)
+        {
+            HttpResponseMessage response;
+            string url = $"/api/buses/routes/{inCity}&{outCity}";
+            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                response = await SendRequestAsync(request);
+
+            List<Bus> result;
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<List<Bus>>(resultContent);
+            }
+            else
+            {
+                throw new Exception("GetAllBusesByRoute failed to get");
+            }
+
+            return result;
+
+
+        }
+
+        public async Task<List<Bus>> GetFastestBuses(string inCity, string outCity, int size = 10)
+        {
+            HttpResponseMessage response;
+            string url = $"/api/buses/fastestRoute?inCity={inCity}&outCity={outCity}&size={size}";
+            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                response = await SendRequestAsync(request);
+
+            List<Bus> result;
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<List<Bus>>(resultContent);
+            }
+            else
+            {
+                throw new Exception("GetFastestBuses failed to get");
+            }
+
+            return result;
+
+
+
+        }
+
+        public async Task<List<Bus>> GetCheapestBuses(string inCity, string outCity, int size = 10)
+        {
+            HttpResponseMessage response;
+            string url = $"/api/buses/cheapestRoute?inCity={inCity}&outCity={outCity}&size={size}";
+            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                response = await SendRequestAsync(request);
+
+            List<Bus> result;
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<List<Bus>>(resultContent);
+            }
+            else
+            {
+                throw new Exception("GetCheapestBuses failed to get");
+            }
+
+            return result;
+        }
+
+
+
+
+
         public async Task<Bus> PostAsync(Bus dto)
         {
 
@@ -55,8 +184,6 @@ namespace GatewayAPI.BusesClient
             }
 
             return result;
-
-
         }
     }
 }

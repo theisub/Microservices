@@ -47,8 +47,104 @@ namespace GatewayAPI.Controllers
         [HttpGet("{id}", Name = "GetBuses")]
         public string Get(int id)
         {
-            return "value etogateway blet";
+            return "value etogogateway";
         }
+
+        //busesGateway/companies/Anyname
+        [HttpGet("companies/{company}", Name = "GetBusesByCompanyGateway")]
+        public async Task<IActionResult> GetBusesByCompany(string company)
+        {
+            IActionResult result;
+
+            try
+            {
+                var busesByCompany = await busesHttpClient.GetAllBusesByCompany(company);
+                result = Ok(busesByCompany);
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
+            return result;
+
+        }
+
+        //busesGateway/priceRange?minPrice = 100&maxPrice = 200
+        [HttpGet("priceRange", Name = "GetAllBusesByPriceGateway")]
+        public async Task<IActionResult> GetAllBusesByPrice(long? minPrice = null, long? maxPrice = null)
+        {
+            IActionResult result;
+
+            try
+            {
+                var busesByPrice = await busesHttpClient.GetAllBusesByPrice(minPrice,maxPrice);
+                result = Ok(busesByPrice);
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
+            return result;
+
+        }
+
+        [HttpGet("routes/{inCity}&{outCity}", Name = "GetBusesByRouteGateway")]
+        public async Task<IActionResult> GetBusesByRoute(string inCity, string outCity)
+        {
+            IActionResult result;
+
+            try
+            {
+                var busesByRoute = await busesHttpClient.GetAllBusesByRoute(inCity, outCity);
+                result = Ok(busesByRoute);
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
+            return result;
+
+        }
+
+        [HttpGet("fastestRoute", Name = "GetFastestBusesGateway")]
+        public async Task<IActionResult> GetFastestBuses(string inCity, string outCity, int size = 10)
+        {
+            IActionResult result;
+
+            try
+            {
+                var busesByTime = await busesHttpClient.GetFastestBuses(inCity, outCity,size);
+                result = Ok(busesByTime);
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
+            return result;
+
+        }
+
+        [HttpGet("cheapestRoute", Name = "GetCheapestBusesGateway")]
+        public async Task<IActionResult> GetCheapestBuses (string inCity, string outCity, int size = 10)
+        {
+            IActionResult result;
+
+            try
+            {
+                var busesByCost = await busesHttpClient.GetCheapestBuses(inCity, outCity, size);
+                result = Ok(busesByCost);
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
+            return result;
+
+
+
+        }
+
+
 
         // POST: api/BusesGateway
         [HttpPost]

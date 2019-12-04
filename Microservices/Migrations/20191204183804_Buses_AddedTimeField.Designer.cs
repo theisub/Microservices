@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusAPI.Migrations
 {
     [DbContext(typeof(BusDbContext))]
-    [Migration("20191203203823_Buses")]
-    partial class Buses
+    [Migration("20191204183804_Buses_AddedTimeField")]
+    partial class Buses_AddedTimeField
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,9 +22,9 @@ namespace BusAPI.Migrations
 
             modelBuilder.Entity("BusAPI.Model.Bus", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BusCompany")
@@ -42,11 +42,14 @@ namespace BusAPI.Migrations
                     b.Property<string>("OutCountry")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("Transit")
                         .HasColumnType("bit");
+
+                    b.Property<int>("TravelTime")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

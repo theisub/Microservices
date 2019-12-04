@@ -54,6 +54,83 @@ namespace BusAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet("companies/{company}", Name = "GetBusesByCompany")]
+        public async Task<IActionResult> GetBusesByCompany(string company)
+        {
+            var buses = await busActions.GetAllBusesByCompany(company);
+
+            if (buses == null)
+            {
+                return NotFound($"Problemes with {company}");
+            }
+            var result = mapper.Map<IEnumerable<Bus>>(buses);
+
+            return Ok(result);
+        }
+
+        [HttpGet("routes/{inCity}&{outCity}", Name = "GetBusesByRoute")]
+        public async Task<IActionResult> GetBusesByRoute(string inCity, string outCity)
+        {
+            var buses = await busActions.GetAllBusesByRoute(inCity,outCity);
+
+            if (buses == null)
+            {
+                return NotFound($"Problemes with {inCity} and {outCity}");
+            }
+            var result = mapper.Map<IEnumerable<Bus>>(buses);
+
+            return Ok(result);
+        }
+
+        //api/buses/priceRange?minPrice=100&maxPrice=200
+        [HttpGet("priceRange", Name = "GetBusesByPrice")]
+        public async Task<IActionResult> GetAllBusesByPrice(long minPrice, long? maxPrice)
+        {
+
+
+            var buses = await busActions.GetAllBusesByPrice(minPrice, maxPrice);
+
+            if (buses == null)
+            {
+                return NotFound($"Problemes with {minPrice} and {maxPrice}");
+            }
+            var result = mapper.Map<IEnumerable<Bus>>(buses);
+
+            return Ok(result);
+        }
+        //api/buses/cheapestRoute?inCity=Moscow&outCity=Paris&size=10
+        [HttpGet("cheapestRoute", Name = "GetCheapestBuses")]
+        
+        public async Task<IActionResult> GetCheapestBuses(string inCity, string outCity,int size=10)
+        {
+
+            var buses = await busActions.GetCheapestBuses(inCity, outCity,size);
+
+            if (buses == null)
+            {
+                return NotFound($"Problemes with {inCity} and {outCity}");
+            }
+            var result = mapper.Map<IEnumerable<Bus>>(buses);
+
+            return Ok(result);
+        }
+
+        //api/buses/fastestRoute?inCity=Moscow&outCity=Paris&size=10
+        [HttpGet("fastestRoute", Name = "GetFastestBuses")]
+
+        public async Task<IActionResult> GetFastestBuses(string inCity, string outCity, int size = 10)
+        {
+
+            var buses = await busActions.GetFastestBuses(inCity, outCity, size);
+
+            if (buses == null)
+            {
+                return NotFound($"Problemes with {inCity} and {outCity}");
+            }
+            var result = mapper.Map<IEnumerable<Bus>>(buses);
+
+            return Ok(result);
+        }
 
         // POST: api/Buses
         [HttpPost]

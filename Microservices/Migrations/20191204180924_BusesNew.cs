@@ -2,7 +2,7 @@
 
 namespace BusAPI.Migrations
 {
-    public partial class Buses : Migration
+    public partial class BusesNew : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,14 +10,14 @@ namespace BusAPI.Migrations
                 name: "Buses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BusCompany = table.Column<string>(nullable: true),
                     InCountry = table.Column<string>(nullable: true),
                     OutCountry = table.Column<string>(nullable: true),
                     InCity = table.Column<string>(nullable: true),
                     OutCity = table.Column<string>(nullable: true),
-                    Price = table.Column<int>(nullable: false),
+                    Price = table.Column<long>(nullable: false),
                     Transit = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
