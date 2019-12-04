@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace BusAPI.Model
 {
-    public class Bus
-    {
+    public class BusDto
+    {  
         public int Id { get; set; }
         public string BusCompany { get; set; }
         public string InCountry { get; set; }

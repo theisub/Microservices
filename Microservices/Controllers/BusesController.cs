@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using BusAPI.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusAPI.Controllers
 {
@@ -11,6 +14,15 @@ namespace BusAPI.Controllers
     [ApiController]
     public class BusesController : ControllerBase
     {
+
+        private readonly IBusActions busActions;
+        private readonly IMapper mapper; 
+        
+        public BusesController(IMapper mapper, IBusActions busActions)
+        {
+            this.busActions = busActions;
+            this.mapper = mapper;
+        }
         // GET: api/Buses
         [HttpGet]
         public IEnumerable<string> Get()
@@ -22,13 +34,53 @@ namespace BusAPI.Controllers
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
         {
-            return "value";
+
+            return "value" + id.ToString() ;
         }
+
+
+
+        [HttpGet("{test}/{id}", Name = "GetAll")]
+        public async Task<IActionResult> GetAll(string test, int id)
+        {
+            var buses = await busActions.GetAllBusesAsync();
+            
+            if (buses == null)
+            {
+                return NotFound($"Problemes with {id}");
+            }
+            var result = mapper.Map<IEnumerable<Bus>>(buses);
+
+            return Ok(result);
+        }
+
 
         // POST: api/Buses
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] BusDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            IActionResult result;
+            try
+            {
+                var entity = mapper.Map<Bus>(dto);
+                var newEntity = await busActions.AddBusAsync(entity);
+                result = CreatedAtAction(nameof(Post), mapper.Map<BusDto>(newEntity));
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            return result;
+
         }
 
         // PUT: api/Buses/5

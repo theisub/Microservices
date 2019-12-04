@@ -1,6 +1,6 @@
 using System;
 
-namespace BusAPI
+namespace GatewayAPI
 {
     public class WeatherForecast
     {

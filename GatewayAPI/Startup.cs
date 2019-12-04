@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using AutoMapper;
 using BusAPI.Model;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-
-namespace BusAPI
+using Microsoft.Extensions.Logging;
+using GatewayAPI.BusesClient;
+namespace GatewayAPI
 {
     public class Startup
     {
@@ -25,10 +27,13 @@ namespace BusAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<BusDbContext>(options => options.UseSqlServer("Data Source=BASEM-ой\\SQLEXPRESS;Initial Catalog=BusesDB;Integrated Security=True;Pooling=False"));
-            services.AddAutoMapper(typeof(BusDtoMappingProfile));
-            services.AddTransient<IBusActions, BusActions>();
             services.AddControllers();
+            services.AddHttpClient<IBusesHttpClient, BusesHttpClient>(client =>
+           {
+               client.BaseAddress = new Uri("https://localhost:44331/");
+           });
+
+            services.AddAutoMapper(typeof(BusDtoMappingProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
