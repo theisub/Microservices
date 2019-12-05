@@ -18,6 +18,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Microservices\BusAPI.csproj" />
+    <ProjectReference Include="..\PlaneAPI\PlaneAPI.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="PlanesClient\" />
+  </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@ namespace PlaneAPI.Model
         public string OutCity { get; set; }
         public int Price { get; set; }
         public bool Transit { get; set; }
-
+        public int TravelTime { get; set; }
         public Plane() { }
     }
 }
