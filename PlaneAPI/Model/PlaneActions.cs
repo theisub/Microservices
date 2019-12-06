@@ -7,7 +7,7 @@ using PlaneAPI.Model;
 
 namespace PlaneAPI
 {
-    public class PlaneActions
+    public class PlaneActions : IPlaneActions
     {
         protected readonly PlaneDbContext context;
 

@@ -31,7 +31,7 @@ namespace BusAPI.Controllers
         }
 
         // GET: api/Buses/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetBus")]
         public string Get(int id)
         {
 

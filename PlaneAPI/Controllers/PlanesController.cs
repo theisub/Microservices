@@ -30,7 +30,7 @@ namespace PlaneAPI.Controllers
         }
 
         // GET: api/Buses/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetPlane")]
         public string Get(int id)
         {
 
@@ -39,7 +39,7 @@ namespace PlaneAPI.Controllers
 
 
 
-        [HttpGet("{test}/{id}", Name = "GetAll")]
+        [HttpGet("{test}/{id}", Name = "GetAllPlanes")]
         public async Task<IActionResult> GetAll(string test, int id)
         {
             var planes = await planeActions.GetAllPlanesAsync();

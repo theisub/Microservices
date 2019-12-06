@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using GatewayAPI.BusesClient;
+using GatewayAPI.PlanesClient;
 namespace GatewayAPI
 {
     public class Startup
@@ -32,6 +33,10 @@ namespace GatewayAPI
            {
                client.BaseAddress = new Uri("https://localhost:44331/");
            });
+            services.AddHttpClient<IPlanesHttpClient, PlanesHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44361/");
+            });
 
             services.AddAutoMapper(typeof(BusDtoMappingProfile));
         }
