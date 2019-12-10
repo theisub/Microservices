@@ -38,7 +38,7 @@ namespace GatewayAPI
                 client.BaseAddress = new Uri("https://localhost:44361/");
             });
 
-            services.AddAutoMapper(typeof(BusDtoMappingProfile));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

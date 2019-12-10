@@ -8,11 +8,12 @@ using System.Text;
 
 namespace GatewayAPI.PlanesClient
 {
-    public class PlanesHttpClient : CustomHttpClientBase, IPlanesHttpClient
+    public class PlanesHttpClient : IPlanesHttpClient
     {
-        public PlanesHttpClient(HttpClient client) : base(client)
+        private readonly HttpClient client;
+        public PlanesHttpClient(HttpClient client) : base()
         {
-
+            this.client = client;
 
         }
         public async Task<string> GetAsync(long id)
@@ -20,7 +21,7 @@ namespace GatewayAPI.PlanesClient
             HttpResponseMessage response;
             string url = $"/api/planes/";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             var resultBody = await response.Content.ReadAsStringAsync();
 
@@ -36,7 +37,7 @@ namespace GatewayAPI.PlanesClient
             string url = $"/api/planes/companies/{companyName}?&pageNum={pageNum}&pageSize={pageSize}";
 
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             List<Plane> result;
 
@@ -59,7 +60,7 @@ namespace GatewayAPI.PlanesClient
             HttpResponseMessage response;
             string url = $"/api/planes/pricerange?minPrice={minPrice}&maxPrice={maxPrice}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             List<Plane> result;
 
@@ -84,7 +85,7 @@ namespace GatewayAPI.PlanesClient
             HttpResponseMessage response;
             string url = $"/api/planes/routes?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             List<Plane> result;
 
@@ -109,7 +110,7 @@ namespace GatewayAPI.PlanesClient
             HttpResponseMessage response;
             string url = $"/api/planes/fastestRoute?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             List<Plane> result;
 
@@ -135,7 +136,7 @@ namespace GatewayAPI.PlanesClient
             HttpResponseMessage response;
             string url = $"/api/planes/cheapestRoute?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             List<Plane> result;
 
@@ -167,7 +168,7 @@ namespace GatewayAPI.PlanesClient
             {
                 Content = new StringContent(body, Encoding.UTF8, "application/json")
             })
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             var resultContent = await response.Content.ReadAsStringAsync();
             Plane result;
@@ -193,7 +194,7 @@ namespace GatewayAPI.PlanesClient
             {
                 Content = new StringContent(body, Encoding.UTF8, "application/json")
             })
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             var resultContent = await response.Content.ReadAsStringAsync();
             Plane result;
@@ -219,7 +220,7 @@ namespace GatewayAPI.PlanesClient
 
             var request = new HttpRequestMessage(HttpMethod.Delete, url);
             
-            response = await SendRequestAsync(request);
+            response = await client.SendAsync(request);
 
             var resultContent = await response.Content.ReadAsStringAsync();
             Plane result;

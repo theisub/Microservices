@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaneAPI", "PlaneAPI\PlaneA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway", "Gateway\Gateway.csproj", "{539A02BE-19C4-4174-A9EC-EB2AD8053D55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayAPI", "GatewayAPI\GatewayAPI.csproj", "{DB03DD8F-D4D2-4448-8619-98E8E2842A46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GatewayAPI", "GatewayAPI\GatewayAPI.csproj", "{DB03DD8F-D4D2-4448-8619-98E8E2842A46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FavoritesAPI", "FavoritesAPI\FavoritesAPI.csproj", "{4B34FC41-5A31-4113-98F2-F6EE8DFC568E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{DB03DD8F-D4D2-4448-8619-98E8E2842A46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB03DD8F-D4D2-4448-8619-98E8E2842A46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB03DD8F-D4D2-4448-8619-98E8E2842A46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B34FC41-5A31-4113-98F2-F6EE8DFC568E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B34FC41-5A31-4113-98F2-F6EE8DFC568E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B34FC41-5A31-4113-98F2-F6EE8DFC568E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B34FC41-5A31-4113-98F2-F6EE8DFC568E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

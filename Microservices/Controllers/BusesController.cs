@@ -16,42 +16,46 @@ namespace BusAPI.Controllers
     {
 
         private readonly IBusActions busActions;
-        private readonly IMapper mapper; 
         
-        public BusesController(IMapper mapper, IBusActions busActions)
+        public BusesController(IBusActions busActions)
         {
             this.busActions = busActions;
-            this.mapper = mapper;
         }
         // GET: api/Buses
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> GetAll()
         {
-            return new string[] { "value1 of bus api", "value2 of bus api" };
+            var buses = await busActions.GetAllBusesAsync();
+
+            if (buses == null)
+            {
+                return NotFound($"Problemes with getting buses");
+            }
+            var result = buses;
+
+            return Ok(result);
         }
 
         // GET: api/Buses/5
         [HttpGet("{id}", Name = "GetBus")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
 
-            return "value" + id.ToString() ;
+            var bus = await busActions.GetBusAsync(id);
+            if (bus == null)
+            {
+
+                return NotFound($"Problemes finding plane with id:{id}");
+            }
+            return Ok(bus);
         }
 
 
 
         [HttpGet("{test}/{id}", Name = "GetAll")]
-        public async Task<IActionResult> GetAll(string test, int id)
+        public IEnumerable<string> GetAll(string test, int id)
         {
-            var buses = await busActions.GetAllBusesAsync();
-            
-            if (buses == null)
-            {
-                return NotFound($"Problemes with {id}");
-            }
-            var result = mapper.Map<IEnumerable<Bus>>(buses);
-
-            return Ok(result);
+            return new string[] { "value1 of plane api", "value2 of plane api" };
         }
 
         [HttpGet("companies/{company}", Name = "GetBusesByCompany")]
@@ -63,7 +67,7 @@ namespace BusAPI.Controllers
             {
                 return NotFound($"Problemes with {company}");
             }
-            var result = mapper.Map<IEnumerable<Bus>>(buses);
+            var result = buses;
 
             return Ok(result);
         }
@@ -77,7 +81,7 @@ namespace BusAPI.Controllers
             {
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
-            var result = mapper.Map<IEnumerable<Bus>>(buses);
+            var result = buses;
 
             return Ok(result);
         }
@@ -94,7 +98,7 @@ namespace BusAPI.Controllers
             {
                 return NotFound($"Problemes with {minPrice} and {maxPrice}");
             }
-            var result = mapper.Map<IEnumerable<Bus>>(buses);
+            var result = buses;
 
             return Ok(result);
         }
@@ -110,7 +114,7 @@ namespace BusAPI.Controllers
             {
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
-            var result = mapper.Map<IEnumerable<Bus>>(buses);
+            var result = buses;
 
             return Ok(result);
         }
@@ -127,14 +131,14 @@ namespace BusAPI.Controllers
             {
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
-            var result = mapper.Map<IEnumerable<Bus>>(buses);
+            var result =buses;
 
             return Ok(result);
         }
 
         // POST: api/Buses
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] BusDto dto)
+        public async Task<IActionResult> Post([FromBody] Bus bus)
         {
             if (!ModelState.IsValid)
             {
@@ -144,9 +148,9 @@ namespace BusAPI.Controllers
             IActionResult result;
             try
             {
-                var entity = mapper.Map<Bus>(dto);
+                var entity =bus;
                 var newEntity = await busActions.AddBusAsync(entity);
-                result = CreatedAtAction(nameof(Post), mapper.Map<BusDto>(newEntity));
+                result = CreatedAtAction(nameof(Post), newEntity);
             }
             catch (DbUpdateException)
             {
@@ -176,7 +180,6 @@ namespace BusAPI.Controllers
             {
                 return NotFound($"Problemes finding {id}");
             }
-
 
 
             try

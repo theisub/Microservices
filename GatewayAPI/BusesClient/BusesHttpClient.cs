@@ -10,11 +10,13 @@ using System.Text;
 
 namespace GatewayAPI.BusesClient
 {
-    public class BusesHttpClient : CustomHttpClientBase, IBusesHttpClient
+    public class BusesHttpClient :  IBusesHttpClient
     {
-        public BusesHttpClient(HttpClient client) : base(client)
+        protected readonly HttpClient client;
+
+        public BusesHttpClient(HttpClient client) : base()
         {
-            
+            this.client = client;
 
         }
         public async Task<string> GetAsync(long id)
@@ -22,7 +24,7 @@ namespace GatewayAPI.BusesClient
             HttpResponseMessage response;
             string url = $"/api/buses/";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             var resultBody = await response.Content.ReadAsStringAsync();
 
@@ -38,7 +40,7 @@ namespace GatewayAPI.BusesClient
             string url = $"/api/buses/companies/{companyName}?&pageNum={pageNum}&pageSize={pageSize}";
             
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             List<Bus> result;
 
@@ -61,7 +63,7 @@ namespace GatewayAPI.BusesClient
             HttpResponseMessage response;
             string url = $"/api/buses/pricerange?minPrice={minPrice}&maxPrice={maxPrice}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             List<Bus> result;
 
@@ -86,7 +88,7 @@ namespace GatewayAPI.BusesClient
             HttpResponseMessage response;
             string url = $"/api/buses/routes?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             List<Bus> result;
 
@@ -111,7 +113,7 @@ namespace GatewayAPI.BusesClient
             HttpResponseMessage response;
             string url = $"/api/buses/fastestRoute?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             List<Bus> result;
 
@@ -137,7 +139,7 @@ namespace GatewayAPI.BusesClient
             HttpResponseMessage response;
             string url = $"/api/buses/cheapestRoute?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             List<Bus> result;
 
@@ -169,7 +171,7 @@ namespace GatewayAPI.BusesClient
             {
                 Content = new StringContent(body, Encoding.UTF8, "application/json")
             })
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             var resultContent = await response.Content.ReadAsStringAsync();
             Bus result;
@@ -195,7 +197,7 @@ namespace GatewayAPI.BusesClient
             {
                 Content = new StringContent(body, Encoding.UTF8, "application/json")
             })
-                response = await SendRequestAsync(request);
+                response = await client.SendAsync(request);
 
             var resultContent = await response.Content.ReadAsStringAsync();
             Bus result;
@@ -221,7 +223,7 @@ namespace GatewayAPI.BusesClient
 
             var request = new HttpRequestMessage(HttpMethod.Delete, url);
 
-            response = await SendRequestAsync(request);
+            response = await client.SendAsync(request);
 
             var resultContent = await response.Content.ReadAsStringAsync();
             Bus result;

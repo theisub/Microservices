@@ -15,12 +15,10 @@ namespace PlaneAPI.Controllers
     public class PlanesController : ControllerBase
     {
         private readonly IPlaneActions planeActions;
-        private readonly IMapper mapper;
 
-        public PlanesController(IMapper mapper, IPlaneActions planeActions)
+        public PlanesController(IPlaneActions planeActions)
         {
             this.planeActions = planeActions;
-            this.mapper = mapper;
         }
         // GET: api/Planes
         [HttpGet]
@@ -32,12 +30,12 @@ namespace PlaneAPI.Controllers
             {
                 return NotFound($"Problemes with getting planes");
             }
-            var result = mapper.Map<IEnumerable<Plane>>(planes);
+            var result = planes;
 
             return Ok(result);
         }
 
-        // GET: api/Buses/5
+        // GET: api/planes/5
         [HttpGet("{id}", Name = "GetPlane")]
         public async Task<IActionResult> Get(int id)
         {
@@ -69,7 +67,7 @@ namespace PlaneAPI.Controllers
             {
                 return NotFound($"Problemes with {company}");
             }
-            var result = mapper.Map<IEnumerable<Plane>>(planes);
+            var result =planes;
 
             return Ok(result);
         }
@@ -83,7 +81,7 @@ namespace PlaneAPI.Controllers
             {
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
-            var result = mapper.Map<IEnumerable<Plane>>(planes);
+            var result = planes;
 
             return Ok(result);
         }
@@ -100,7 +98,7 @@ namespace PlaneAPI.Controllers
             {
                 return NotFound($"Problemes with {minPrice} and {maxPrice}");
             }
-            var result = mapper.Map<IEnumerable<Plane>>(planes);
+            var result = planes;
 
             return Ok(result);
         }
@@ -116,7 +114,7 @@ namespace PlaneAPI.Controllers
             {
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
-            var result = mapper.Map<IEnumerable<Plane>>(planes);
+            var result = planes;
 
             return Ok(result);
         }
@@ -133,7 +131,7 @@ namespace PlaneAPI.Controllers
             {
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
-            var result = mapper.Map<IEnumerable<Plane>>(buses);
+            var result = buses;
 
             return Ok(result);
         }
@@ -150,9 +148,9 @@ namespace PlaneAPI.Controllers
             IActionResult result;
             try
             {
-                var entity = mapper.Map<Plane>(plane);
+                var entity = plane;
                 var newEntity = await planeActions.AddPlaneAsync(entity);
-                result = CreatedAtAction(nameof(Post), mapper.Map<Plane>(newEntity));
+                result = CreatedAtAction(nameof(Post), newEntity);
             }
             catch (DbUpdateException)
             {

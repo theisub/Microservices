@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using BusAPI.Model;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-namespace BusAPI
+namespace FavoritesAPI
 {
     public class Startup
     {
@@ -25,8 +25,6 @@ namespace BusAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<BusDbContext>(options => options.UseSqlServer("Data Source=BASEM-ой\\SQLEXPRESS;Initial Catalog=BusesDB;Integrated Security=True;Pooling=False"));
-            services.AddTransient<IBusActions, BusActions>();
             services.AddControllers();
         }
 
