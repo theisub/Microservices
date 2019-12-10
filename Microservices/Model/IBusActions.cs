@@ -9,14 +9,16 @@ namespace BusAPI.Model
     {
         Task<Bus> AddBusAsync(Bus bus);
         Task<Bus> GetBusAsync(long id);
+        Task UpdateBusAsync(Bus bus);
+        Task<Bus> DeleteBusAsync(long id);
         Task<List<Bus>> GetAllBusesAsync();
 
-        Task<List<Bus>> GetAllBusesByCompany(string companyName);
-        Task<List<Bus>> GetAllBusesByPrice(long? minPrice = null, long? maxPrice=null);
-        Task<List<Bus>> GetAllBusesByRoute(string inCity, string outCity);
+        Task<IEnumerable<Bus>> GetAllBusesByCompany(string companyName, int pageNum = 1, int pageSize = 10);
+        Task<IEnumerable<Bus>> GetAllBusesByPrice(long? minPrice = null, long? maxPrice=null, int pageNum = 1, int pageSize = 10);
+        Task<IEnumerable<Bus>> GetAllBusesByRoute(string inCity, string outCity, int pageNum = 1, int pageSize = 10);
 
-        Task<List<Bus>> GetFastestBuses(string inCity, string outCity,int size = 10);
-        Task<List<Bus>> GetCheapestBuses(string inCity, string outCity, int size = 10);
+        Task<IEnumerable<Bus>> GetFastestBuses(string inCity, string outCity, int pageNum = 1, int pageSize = 10);
+        Task<IEnumerable<Bus>> GetCheapestBuses(string inCity, string outCity, int pageNum = 1, int pageSize = 10);
 
 
     }

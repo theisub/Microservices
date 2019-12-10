@@ -29,11 +29,11 @@ namespace GatewayAPI.PlanesClient
         }
 
 
-        public async Task<List<Plane>> GetAllPlanesByCompany(string companyName)
+        public async Task<List<Plane>> GetAllPlanesByCompany(string companyName, int pageNum = 1, int pageSize = 10)
         {
             HttpResponseMessage response;
 
-            string url = $"/api/planes/companies/{companyName}";
+            string url = $"/api/planes/companies/{companyName}?&pageNum={pageNum}&pageSize={pageSize}";
 
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await SendRequestAsync(request);
@@ -54,10 +54,10 @@ namespace GatewayAPI.PlanesClient
             return result;
         }
 
-        public async Task<List<Plane>> GetAllPlanesByPrice(long? minPrice = null, long? maxPrice = null)
+        public async Task<List<Plane>> GetAllPlanesByPrice(long? minPrice = null, long? maxPrice = null, int pageNum = 1, int pageSize = 10)
         {
             HttpResponseMessage response;
-            string url = $"/api/planes/pricerange?minPrice={minPrice}&maxPrice={maxPrice}";
+            string url = $"/api/planes/pricerange?minPrice={minPrice}&maxPrice={maxPrice}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await SendRequestAsync(request);
 
@@ -79,10 +79,10 @@ namespace GatewayAPI.PlanesClient
         }
 
 
-        public async Task<List<Plane>> GetAllPlanesByRoute(string inCity, string outCity)
+        public async Task<List<Plane>> GetAllPlanesByRoute(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
             HttpResponseMessage response;
-            string url = $"/api/planes/routes/{inCity}&{outCity}";
+            string url = $"/api/planes/routes?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await SendRequestAsync(request);
 
@@ -104,10 +104,10 @@ namespace GatewayAPI.PlanesClient
 
         }
 
-        public async Task<List<Plane>> GetFastestPlanes(string inCity, string outCity, int size = 10)
+        public async Task<List<Plane>> GetFastestPlanes(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
             HttpResponseMessage response;
-            string url = $"/api/planes/fastestRoute?inCity={inCity}&outCity={outCity}&size={size}";
+            string url = $"/api/planes/fastestRoute?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await SendRequestAsync(request);
 
@@ -130,10 +130,10 @@ namespace GatewayAPI.PlanesClient
 
         }
 
-        public async Task<List<Plane>> GetCheapestPlanes(string inCity, string outCity, int size = 10)
+        public async Task<List<Plane>> GetCheapestPlanes(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
             HttpResponseMessage response;
-            string url = $"/api/planes/cheapestRoute?inCity={inCity}&outCity={outCity}&size={size}";
+            string url = $"/api/planes/cheapestRoute?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await SendRequestAsync(request);
 
@@ -147,7 +147,7 @@ namespace GatewayAPI.PlanesClient
             }
             else
             {
-                throw new Exception("GetCheapestBuses failed to get");
+                throw new Exception("GetCheapestPlanes failed to get");
             }
 
             return result;
@@ -157,12 +157,12 @@ namespace GatewayAPI.PlanesClient
 
 
 
-        public async Task<Plane> PostAsync(Plane dto)
+        public async Task<Plane> PostAsync(Plane plane)
         {
 
             HttpResponseMessage response;
             string url = $"/api/planes/";
-            var body = JsonConvert.SerializeObject(dto);
+            var body = JsonConvert.SerializeObject(plane);
             using (var request = new HttpRequestMessage(HttpMethod.Post, url)
             {
                 Content = new StringContent(body, Encoding.UTF8, "application/json")
@@ -178,10 +178,65 @@ namespace GatewayAPI.PlanesClient
             }
             else
             {
-                throw new Exception("Bus failed to be posted");
+                throw new Exception("plane failed to be posted");
             }
 
             return result;
         }
+
+        public async Task<Plane> PutAsync(long id, Plane plane)
+        {
+            HttpResponseMessage response;
+            string url = $"/api/planes/{id}";
+            var body = JsonConvert.SerializeObject(plane);
+            using (var request = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = new StringContent(body, Encoding.UTF8, "application/json")
+            })
+                response = await SendRequestAsync(request);
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+            Plane result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<Plane>(resultContent);
+            }
+            else
+            {
+                throw new Exception("Plane failed to be put");
+            }
+
+            return result;
+
+
+        }
+
+        public async Task<Plane> DeleteAsync(long id)
+        {
+            HttpResponseMessage response;
+            string url = $"/api/planes/{id}";
+
+            var request = new HttpRequestMessage(HttpMethod.Delete, url);
+            
+            response = await SendRequestAsync(request);
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+            Plane result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<Plane>(resultContent);
+            }
+            else
+            {
+                throw new Exception("Plane failed to be deleted");
+            }
+
+            return result;
+
+
+        }
+
     }
 }

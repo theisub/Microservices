@@ -55,9 +55,9 @@ namespace BusAPI.Controllers
         }
 
         [HttpGet("companies/{company}", Name = "GetBusesByCompany")]
-        public async Task<IActionResult> GetBusesByCompany(string company)
+        public async Task<IActionResult> GetBusesByCompany(string company, int pageNum = 1, int pageSize = 10)
         {
-            var buses = await busActions.GetAllBusesByCompany(company);
+            var buses = await busActions.GetAllBusesByCompany(company,pageNum,pageSize);
 
             if (buses == null)
             {
@@ -68,10 +68,10 @@ namespace BusAPI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("routes/{inCity}&{outCity}", Name = "GetBusesByRoute")]
-        public async Task<IActionResult> GetBusesByRoute(string inCity, string outCity)
+        [HttpGet("routes", Name = "GetBusesByRoute")]
+        public async Task<IActionResult> GetBusesByRoute(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
-            var buses = await busActions.GetAllBusesByRoute(inCity,outCity);
+            var buses = await busActions.GetAllBusesByRoute(inCity,outCity,pageNum,pageSize);
 
             if (buses == null)
             {
@@ -84,11 +84,11 @@ namespace BusAPI.Controllers
 
         //api/buses/priceRange?minPrice=100&maxPrice=200
         [HttpGet("priceRange", Name = "GetBusesByPrice")]
-        public async Task<IActionResult> GetAllBusesByPrice(long minPrice, long? maxPrice)
+        public async Task<IActionResult> GetAllBusesByPrice(long minPrice, long? maxPrice, int pageNum = 1, int pageSize = 10)
         {
 
 
-            var buses = await busActions.GetAllBusesByPrice(minPrice, maxPrice);
+            var buses = await busActions.GetAllBusesByPrice(minPrice, maxPrice,pageNum,pageSize);
 
             if (buses == null)
             {
@@ -101,10 +101,10 @@ namespace BusAPI.Controllers
         //api/buses/cheapestRoute?inCity=Moscow&outCity=Paris&size=10
         [HttpGet("cheapestRoute", Name = "GetCheapestBuses")]
         
-        public async Task<IActionResult> GetCheapestBuses(string inCity, string outCity,int size=10)
+        public async Task<IActionResult> GetCheapestBuses(string inCity, string outCity,int pageNum = 1, int pageSize = 10)
         {
 
-            var buses = await busActions.GetCheapestBuses(inCity, outCity,size);
+            var buses = await busActions.GetCheapestBuses(inCity, outCity,pageNum,pageSize);
 
             if (buses == null)
             {
@@ -118,10 +118,10 @@ namespace BusAPI.Controllers
         //api/buses/fastestRoute?inCity=Moscow&outCity=Paris&size=10
         [HttpGet("fastestRoute", Name = "GetFastestBuses")]
 
-        public async Task<IActionResult> GetFastestBuses(string inCity, string outCity, int size = 10)
+        public async Task<IActionResult> GetFastestBuses(string inCity, string outCity,int pageNum = 1, int pageSize = 10)
         {
 
-            var buses = await busActions.GetFastestBuses(inCity, outCity, size);
+            var buses = await busActions.GetFastestBuses(inCity, outCity, pageNum,pageSize);
 
             if (buses == null)
             {
@@ -162,14 +162,58 @@ namespace BusAPI.Controllers
 
         // PUT: api/Buses/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] Bus bus)
         {
+            IActionResult result;
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var findBus = await busActions.GetBusAsync(id);
+            if (findBus == null)
+            {
+                return NotFound($"Problemes finding {id}");
+            }
+
+
+
+            try
+            {
+                var entity = bus;
+                entity.Id = id;
+                await busActions.UpdateBusAsync(entity);
+                result = Ok(bus);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            return result;
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var deletedBus= await busActions.DeleteBusAsync(id);
+            if (deletedBus == null)
+            {
+                return NotFound($"Problemes deleting {id}");
+            }
+
+            return Ok(deletedBus);
         }
     }
 }

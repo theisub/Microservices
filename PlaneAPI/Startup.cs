@@ -30,7 +30,7 @@ namespace PlaneAPI
         {
             services.AddDbContextPool<PlaneDbContext>(options => options.UseSqlServer("Data Source=BASEM-ой\\SQLEXPRESS;Initial Catalog=PlanesDB;Integrated Security=True;Pooling=False"));
             services.AddAutoMapper(typeof(PlaneDtoMappingProfile));
-            services.AddTransient<IPlaneActions, PlaneActions>();
+            services.AddScoped<IPlaneActions, PlaneActions>();
             services.AddControllers();
         }
 

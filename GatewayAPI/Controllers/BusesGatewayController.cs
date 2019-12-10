@@ -52,13 +52,13 @@ namespace GatewayAPI.Controllers
 
         //busesGateway/companies/Anyname
         [HttpGet("companies/{company}", Name = "GetBusesByCompanyGateway")]
-        public async Task<IActionResult> GetBusesByCompany(string company)
+        public async Task<IActionResult> GetBusesByCompany(string company, int pageNum = 1, int pageSize = 10)
         {
             IActionResult result;
 
             try
             {
-                var busesByCompany = await busesHttpClient.GetAllBusesByCompany(company);
+                var busesByCompany = await busesHttpClient.GetAllBusesByCompany(company,pageNum,pageSize);
                 result = Ok(busesByCompany);
             }
             catch (Exception ex)
@@ -69,15 +69,15 @@ namespace GatewayAPI.Controllers
 
         }
 
-        //busesGateway/priceRange?minPrice = 100&maxPrice = 200
+        //busesGateway/priceRange?minPrice=100&maxPrice=200
         [HttpGet("priceRange", Name = "GetAllBusesByPriceGateway")]
-        public async Task<IActionResult> GetAllBusesByPrice(long? minPrice = null, long? maxPrice = null)
+        public async Task<IActionResult> GetAllBusesByPrice(long? minPrice = null, long? maxPrice = null, int pageNum = 1, int pageSize = 10)
         {
             IActionResult result;
 
             try
             {
-                var busesByPrice = await busesHttpClient.GetAllBusesByPrice(minPrice,maxPrice);
+                var busesByPrice = await busesHttpClient.GetAllBusesByPrice(minPrice,maxPrice, pageNum, pageSize);
                 result = Ok(busesByPrice);
             }
             catch (Exception ex)
@@ -88,14 +88,14 @@ namespace GatewayAPI.Controllers
 
         }
 
-        [HttpGet("routes/{inCity}&{outCity}", Name = "GetBusesByRouteGateway")]
-        public async Task<IActionResult> GetBusesByRoute(string inCity, string outCity)
+        [HttpGet("routes", Name = "GetBusesByRouteGateway")]
+        public async Task<IActionResult> GetBusesByRoute(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
             IActionResult result;
 
             try
             {
-                var busesByRoute = await busesHttpClient.GetAllBusesByRoute(inCity, outCity);
+                var busesByRoute = await busesHttpClient.GetAllBusesByRoute(inCity, outCity, pageNum, pageSize);
                 result = Ok(busesByRoute);
             }
             catch (Exception ex)
@@ -107,13 +107,13 @@ namespace GatewayAPI.Controllers
         }
 
         [HttpGet("fastestRoute", Name = "GetFastestBusesGateway")]
-        public async Task<IActionResult> GetFastestBuses(string inCity, string outCity, int size = 10)
+        public async Task<IActionResult> GetFastestBuses(string inCity, string outCity,int pageNum = 1, int pageSize = 10)
         {
             IActionResult result;
 
             try
             {
-                var busesByTime = await busesHttpClient.GetFastestBuses(inCity, outCity,size);
+                var busesByTime = await busesHttpClient.GetFastestBuses(inCity, outCity, pageNum, pageSize);
                 result = Ok(busesByTime);
             }
             catch (Exception ex)
@@ -125,13 +125,13 @@ namespace GatewayAPI.Controllers
         }
 
         [HttpGet("cheapestRoute", Name = "GetCheapestBusesGateway")]
-        public async Task<IActionResult> GetCheapestBuses (string inCity, string outCity, int size = 10)
+        public async Task<IActionResult> GetCheapestBuses (string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
             IActionResult result;
 
             try
             {
-                var busesByCost = await busesHttpClient.GetCheapestBuses(inCity, outCity, size);
+                var busesByCost = await busesHttpClient.GetCheapestBuses(inCity, outCity, pageNum, pageSize);
                 result = Ok(busesByCost);
             }
             catch (Exception ex)
@@ -176,14 +176,60 @@ namespace GatewayAPI.Controllers
 
         // PUT: api/BusesGateway/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] Bus plane)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            IActionResult result;
+            try
+            {
+                var entity = plane;
+                var newEntity = await busesHttpClient.PutAsync(id, entity);
+                result = CreatedAtAction(nameof(Put), newEntity);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            return result;
+
+
+
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            IActionResult result;
+            try
+            {
+
+                var newEntity = await busesHttpClient.DeleteAsync(id);
+                result = CreatedAtAction(nameof(Put), newEntity);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            return result;
         }
     }
 }

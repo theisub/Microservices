@@ -7,14 +7,16 @@ namespace GatewayAPI.PlanesClient
     public interface IPlanesHttpClient
     {
         Task<string> GetAsync(long id);
-        Task<Plane> PostAsync(Plane bus);
+        Task<Plane> PostAsync(Plane plane);
+        Task<Plane> PutAsync(long id,Plane plane);
+        Task<Plane> DeleteAsync(long id);
 
-        Task<List<Plane>> GetAllPlanesByCompany(string companyName);
-        Task<List<Plane>> GetAllPlanesByPrice(long? minPrice = null, long? maxPrice = null);
-        Task<List<Plane>> GetAllPlanesByRoute(string inCity, string outCity);
+        Task<List<Plane>> GetAllPlanesByCompany(string companyName, int pageNum = 1, int pageSize = 10);
+        Task<List<Plane>> GetAllPlanesByPrice(long? minPrice = null, long? maxPrice = null, int pageNum = 1, int pageSize = 10);
+        Task<List<Plane>> GetAllPlanesByRoute(string inCity, string outCity, int pageNum = 1, int pageSize = 10);
 
-        Task<List<Plane>> GetFastestPlanes(string inCity, string outCity, int size = 10);
-        Task<List<Plane>> GetCheapestPlanes(string inCity, string outCity, int size = 10);
+        Task<List<Plane>> GetFastestPlanes(string inCity, string outCity, int pageNum = 1, int pageSize = 10);
+        Task<List<Plane>> GetCheapestPlanes(string inCity, string outCity, int pageNum = 1, int pageSize = 10);
 
     }
 }

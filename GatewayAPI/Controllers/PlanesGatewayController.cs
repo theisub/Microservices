@@ -88,15 +88,15 @@ namespace GatewayAPI.Controllers
             return result;
 
         }
-
-        [HttpGet("routes/{inCity}&{outCity}", Name = "GetPlanesByRouteGateway")]
-        public async Task<IActionResult> GetPlanesByRoute(string inCity, string outCity)
+        //?/????
+        [HttpGet("routes", Name = "GetPlanesByRouteGateway")]
+        public async Task<IActionResult> GetPlanesByRoute(string inCity, string outCity,int pageNum = 1, int pageSize = 10)
         {
             IActionResult result;
 
             try
             {
-                var PlanesByRoute = await planesHttpClient.GetAllPlanesByRoute(inCity, outCity);
+                var PlanesByRoute = await planesHttpClient.GetAllPlanesByRoute(inCity, outCity,pageNum,pageSize);
                 result = Ok(PlanesByRoute);
             }
             catch (Exception ex)
@@ -108,13 +108,13 @@ namespace GatewayAPI.Controllers
         }
 
         [HttpGet("fastestRoute", Name = "GetFastestPlanesGateway")]
-        public async Task<IActionResult> GetFastestPlanes(string inCity, string outCity, int size = 10)
+        public async Task<IActionResult> GetFastestPlanes(string inCity, string outCity,int pageNum = 1, int pageSize = 10)
         {
             IActionResult result;
 
             try
             {
-                var PlanesByTime = await planesHttpClient.GetFastestPlanes(inCity, outCity, size);
+                var PlanesByTime = await planesHttpClient.GetFastestPlanes(inCity, outCity, pageNum,pageSize);
                 result = Ok(PlanesByTime);
             }
             catch (Exception ex)
@@ -126,13 +126,13 @@ namespace GatewayAPI.Controllers
         }
 
         [HttpGet("cheapestRoute", Name = "GetCheapestPlanesGateway")]
-        public async Task<IActionResult> GetCheapestPlanes(string inCity, string outCity, int size = 10)
+        public async Task<IActionResult> GetCheapestPlanes(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
             IActionResult result;
 
             try
             {
-                var PlanesByCost = await planesHttpClient.GetCheapestPlanes(inCity, outCity, size);
+                var PlanesByCost = await planesHttpClient.GetCheapestPlanes(inCity, outCity, pageNum,pageSize);
                 result = Ok(PlanesByCost);
             }
             catch (Exception ex)
@@ -159,7 +159,7 @@ namespace GatewayAPI.Controllers
             IActionResult result;
             try
             {
-                var entity = mapper.Map<Plane>(plane);
+                var entity =plane;
                 var newEntity = await planesHttpClient.PostAsync(entity);
                 result = CreatedAtAction(nameof(Post), mapper.Map<Plane>(newEntity));
             }
@@ -177,14 +177,60 @@ namespace GatewayAPI.Controllers
 
         // PUT: api/PlanesGateway/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] Plane plane)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            IActionResult result;
+            try
+            {
+                var entity = plane;
+                var newEntity = await planesHttpClient.PutAsync(id, entity);
+                result = CreatedAtAction(nameof(Put), newEntity);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            return result;
+
+
+
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            IActionResult result;
+            try
+            {
+               
+                var newEntity = await planesHttpClient.DeleteAsync(id);
+                result = CreatedAtAction(nameof(Put), newEntity);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            return result;
         }
     }
 }

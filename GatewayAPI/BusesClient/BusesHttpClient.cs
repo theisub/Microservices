@@ -31,11 +31,11 @@ namespace GatewayAPI.BusesClient
         }
 
 
-        public async Task<List<Bus>> GetAllBusesByCompany(string companyName)
+        public async Task<List<Bus>> GetAllBusesByCompany(string companyName, int pageNum = 1, int pageSize = 10)
         {
             HttpResponseMessage response;
 
-            string url = $"/api/buses/companies/{companyName}";
+            string url = $"/api/buses/companies/{companyName}?&pageNum={pageNum}&pageSize={pageSize}";
             
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await SendRequestAsync(request);
@@ -56,10 +56,10 @@ namespace GatewayAPI.BusesClient
             return result;
         }
 
-        public async Task<List<Bus>> GetAllBusesByPrice(long? minPrice = null, long? maxPrice = null)
+        public async Task<List<Bus>> GetAllBusesByPrice(long? minPrice = null, long? maxPrice = null, int pageNum = 1, int pageSize = 10)
         {
             HttpResponseMessage response;
-            string url = $"/api/buses/pricerange?minPrice={minPrice}&maxPrice={maxPrice}";
+            string url = $"/api/buses/pricerange?minPrice={minPrice}&maxPrice={maxPrice}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await SendRequestAsync(request);
 
@@ -81,10 +81,10 @@ namespace GatewayAPI.BusesClient
         }
 
 
-        public async Task<List<Bus>> GetAllBusesByRoute(string inCity, string outCity)
+        public async Task<List<Bus>> GetAllBusesByRoute(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
             HttpResponseMessage response;
-            string url = $"/api/buses/routes/{inCity}&{outCity}";
+            string url = $"/api/buses/routes?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await SendRequestAsync(request);
 
@@ -106,10 +106,10 @@ namespace GatewayAPI.BusesClient
 
         }
 
-        public async Task<List<Bus>> GetFastestBuses(string inCity, string outCity, int size = 10)
+        public async Task<List<Bus>> GetFastestBuses(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
             HttpResponseMessage response;
-            string url = $"/api/buses/fastestRoute?inCity={inCity}&outCity={outCity}&size={size}";
+            string url = $"/api/buses/fastestRoute?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await SendRequestAsync(request);
 
@@ -132,10 +132,10 @@ namespace GatewayAPI.BusesClient
 
         }
 
-        public async Task<List<Bus>> GetCheapestBuses(string inCity, string outCity, int size = 10)
+        public async Task<List<Bus>> GetCheapestBuses(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
             HttpResponseMessage response;
-            string url = $"/api/buses/cheapestRoute?inCity={inCity}&outCity={outCity}&size={size}";
+            string url = $"/api/buses/cheapestRoute?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await SendRequestAsync(request);
 
@@ -185,5 +185,62 @@ namespace GatewayAPI.BusesClient
 
             return result;
         }
+
+        public async Task<Bus> PutAsync(long id, Bus bus)
+        {
+            HttpResponseMessage response;
+            string url = $"/api/buses/{id}";
+            var body = JsonConvert.SerializeObject(bus);
+            using (var request = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = new StringContent(body, Encoding.UTF8, "application/json")
+            })
+                response = await SendRequestAsync(request);
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+            Bus result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<Bus>(resultContent);
+            }
+            else
+            {
+                throw new Exception("Plane failed to be put");
+            }
+
+            return result;
+
+
+        }
+
+        public async Task<Bus> DeleteAsync(long id)
+        {
+            HttpResponseMessage response;
+            string url = $"/api/buses/{id}";
+
+            var request = new HttpRequestMessage(HttpMethod.Delete, url);
+
+            response = await SendRequestAsync(request);
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+            Bus result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<Bus>(resultContent);
+            }
+            else
+            {
+                throw new Exception("Bus failed to be deleted");
+            }
+
+            return result;
+
+
+        }
+
+
+
     }
 }

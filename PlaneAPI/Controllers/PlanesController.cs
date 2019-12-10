@@ -24,39 +24,46 @@ namespace PlaneAPI.Controllers
         }
         // GET: api/Planes
         [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1 of plane api", "value2 of plane api" };
-        }
-
-        // GET: api/Buses/5
-        [HttpGet("{id}", Name = "GetPlane")]
-        public string Get(int id)
-        {
-
-            return "value" + id.ToString();
-        }
-
-
-
-        [HttpGet("{test}/{id}", Name = "GetAllPlanes")]
-        public async Task<IActionResult> GetAll(string test, int id)
+        public async Task<IActionResult> GetAll()
         {
             var planes = await planeActions.GetAllPlanesAsync();
 
             if (planes == null)
             {
-                return NotFound($"Problemes with {id}");
+                return NotFound($"Problemes with getting planes");
             }
             var result = mapper.Map<IEnumerable<Plane>>(planes);
 
             return Ok(result);
         }
 
-        [HttpGet("companies/{company}", Name = "GetPlanesByCompany")]
-        public async Task<IActionResult> GetPlanesByCompany(string company)
+        // GET: api/Buses/5
+        [HttpGet("{id}", Name = "GetPlane")]
+        public async Task<IActionResult> Get(int id)
         {
-            var planes = await planeActions.GetAllPlanesByCompany(company);
+
+            var plane = await planeActions.GetPlaneAsync(id);
+            if (plane == null)
+            {
+
+                return NotFound($"Problemes finding plane with id:{id}");
+            }
+            return Ok(plane);
+               
+        }
+
+
+
+        [HttpGet("{test}/{id}", Name = "GetAllPlanes")]
+        public IEnumerable<string> GetAll(string test, int id)
+        {
+            return new string[] { "value1 of plane api", "value2 of plane api" };
+        }
+
+        [HttpGet("companies/{company}", Name = "GetPlanesByCompany")]
+        public async Task<IActionResult> GetPlanesByCompany(string company,int pageNum = 1, int pageSize = 10)
+        {
+            var planes = await planeActions.GetAllPlanesByCompany(company,pageNum,pageSize);
 
             if (planes == null)
             {
@@ -67,10 +74,10 @@ namespace PlaneAPI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("routes/{inCity}&{outCity}", Name = "GetPlanesByRoute")]
-        public async Task<IActionResult> GetPlanesByRoute(string inCity, string outCity)
+        [HttpGet("routes", Name = "GetPlanesByRoute")]
+        public async Task<IActionResult> GetPlanesByRoute(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
-            var planes = await planeActions.GetAllPlanesByRoute(inCity, outCity);
+            var planes = await planeActions.GetAllPlanesByRoute(inCity, outCity,pageNum,pageSize);
 
             if (planes == null)
             {
@@ -81,13 +88,13 @@ namespace PlaneAPI.Controllers
             return Ok(result);
         }
 
-        //api/planes/priceRange?minPrice=100&maxPrice=200
+        //api/planes/priceRange?minPrice=100&maxPrice=200&pageSize=10&pageNum=1
         [HttpGet("priceRange", Name = "GetAllPlanesByPrice")]
-        public async Task<IActionResult> GetAllPlanesByPrice(long minPrice, long? maxPrice)
+        public async Task<IActionResult> GetAllPlanesByPrice(long? minPrice, long? maxPrice, int pageNum = 1, int pageSize = 10)
         {
 
 
-            var planes = await planeActions.GetAllPlanesByPrice(minPrice, maxPrice);
+            var planes = await planeActions.GetAllPlanesByPrice(minPrice, maxPrice,pageNum,pageSize);
 
             if (planes == null)
             {
@@ -97,13 +104,13 @@ namespace PlaneAPI.Controllers
 
             return Ok(result);
         }
-        //api/planes/cheapestRoute?inCity=Moscow&outCity=Paris&size=10
+        //api/planes/cheapestRoute?inCity=Moscow&outCity=Paris&pageSize=10&pageNum=1
         [HttpGet("cheapestRoute", Name = "GetCheapestPlanes")]
 
-        public async Task<IActionResult> GetCheapestPlanes(string inCity, string outCity, int size = 10)
+        public async Task<IActionResult> GetCheapestPlanes(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
 
-            var planes = await planeActions.GetCheapestPlanes(inCity, outCity, size);
+            var planes = await planeActions.GetCheapestPlanes(inCity, outCity,pageNum,pageSize);
 
             if (planes == null)
             {
@@ -117,10 +124,10 @@ namespace PlaneAPI.Controllers
         //api/planes/fastestRoute?inCity=Moscow&outCity=Paris&size=10
         [HttpGet("fastestRoute", Name = "GetFastestPlanes")]
 
-        public async Task<IActionResult> GetFastestPlanes(string inCity, string outCity, int size = 10)
+        public async Task<IActionResult> GetFastestPlanes(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
 
-            var buses = await planeActions.GetFastestPlanes(inCity, outCity, size);
+            var buses = await planeActions.GetFastestPlanes(inCity, outCity,pageNum,pageSize);
 
             if (buses == null)
             {
@@ -159,16 +166,60 @@ namespace PlaneAPI.Controllers
 
         }
 
-        // PUT: api/Buses/5
+        // PUT: api/planes/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] Plane plane)
         {
+            IActionResult result;
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var findPlane = await planeActions.GetPlaneAsync(id);
+            if (findPlane== null)
+            {
+                return NotFound($"Problemes finding {id}") ;
+            }
+
+
+
+            try
+            {
+                var entity = plane;
+                entity.Id = id;
+                await planeActions.UpdatePlaneAsync(entity);
+                result = Ok(plane);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            return result;
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var deletedPlane = await planeActions.DeletePlaneAsync(id);
+            if (deletedPlane == null)
+            {
+                return NotFound($"Problemes deleting {id}");
+            }
+
+            return Ok(deletedPlane);
         }
     }
 }

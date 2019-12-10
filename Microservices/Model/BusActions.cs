@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace BusAPI.Model
 {
@@ -29,10 +30,38 @@ namespace BusAPI.Model
             return bus;
         }
 
+        public async Task UpdateBusAsync(Bus bus)
+        {
+
+            context.Entry(await context.Buses.FirstOrDefaultAsync(x => x.Id == bus.Id)).CurrentValues.SetValues(bus);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<Bus> DeleteBusAsync(long id)
+        {
+            var plane = await context.Buses.FirstOrDefaultAsync(plane => plane.Id == id);
+            if (plane == null)
+            {
+                return plane;
+            }
+
+            try
+            {
+                context.Buses.Remove(plane);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Exception mess = ex.InnerException;
+
+            }
+            return plane;
+        }
+
         public Task<Bus> GetBusAsync(long id)
         {
-            return context.Buses.FirstOrDefaultAsync(p => p.Price == id);
-            //return context.Buses.FirstOrDefaultAsync(p => p.Id == id);
+            //return context.Buses.FirstOrDefaultAsync(p => p.Price == id);
+            return context.Buses.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public Task<List<Bus>> GetAllBusesAsync()
@@ -41,50 +70,50 @@ namespace BusAPI.Model
 
         }
 
-        public async Task<List<Bus>> GetAllBusesByCompany(string companyName)
+        public async Task<IEnumerable<Bus>> GetAllBusesByCompany(string companyName, int pageNum = 1, int pageSize = 10)
         {
-            return await context.Buses.Where(a => a.BusCompany == companyName).ToListAsync();
+            return await context.Buses.Where(a => a.BusCompany == companyName).ToPagedListAsync(pageNum, pageSize);
 
         }
 
-        public async Task<List<Bus>> GetAllBusesByPrice(long? minPrice = null, long? maxPrice = null)
+        public async Task<IEnumerable<Bus>> GetAllBusesByPrice(long? minPrice = null, long? maxPrice = null, int pageNum = 1, int pageSize = 10)
         {
             if (minPrice != null && maxPrice !=null)
             {
 
-                return await context.Buses.Where(a => a.Price >= minPrice && a.Price <= maxPrice).ToListAsync();
+                return await context.Buses.Where(a => a.Price >= minPrice && a.Price <= maxPrice).ToPagedListAsync(pageNum, pageSize);
 
             }
             else if (minPrice != null)
             {
-                return await context.Buses.Where(a => a.Price >= maxPrice).ToListAsync();
+                return await context.Buses.Where(a => a.Price >= maxPrice).ToPagedListAsync(pageNum, pageSize);
 
             }
             else if (maxPrice != null)
             {
-                return await context.Buses.Where(a => a.Price <= maxPrice).ToListAsync();
+                return await context.Buses.Where(a => a.Price <= maxPrice).ToPagedListAsync(pageNum, pageSize);
             }
             else
             {
-                return await context.Buses.ToListAsync();
+                return await context.Buses.ToPagedListAsync(pageNum, pageSize);
 
             }
         }
 
-        public async Task<List<Bus>> GetAllBusesByRoute(string inCity, string outCity)
+        public async Task<IEnumerable<Bus>> GetAllBusesByRoute(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
-            return await context.Buses.Where(a => a.InCity == inCity && a.OutCity == outCity).ToListAsync();
+            return await context.Buses.Where(a => a.InCity == inCity && a.OutCity == outCity).ToPagedListAsync(pageNum, pageSize);
         }
 
-        public async Task<List<Bus>> GetFastestBuses(string inCity, string outCity, int size = 10)
+        public async Task<IEnumerable<Bus>> GetFastestBuses(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
 
-            return await context.Buses.Where(a => a.InCity == inCity && a.OutCity == outCity).OrderBy(a => a.TravelTime).Take(size).ToListAsync();
+            return await context.Buses.Where(a => a.InCity == inCity && a.OutCity == outCity).ToPagedListAsync(pageNum, pageSize);
 
         }
-        public async Task<List<Bus>> GetCheapestBuses(string inCity, string outCity,int size = 10)
+        public async Task<IEnumerable<Bus>> GetCheapestBuses(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
         {
-            return await context.Buses.Where(a => a.InCity == inCity && a.OutCity == outCity).OrderBy(a => a.Price).Take(size).ToListAsync();
+            return await context.Buses.Where(a => a.InCity == inCity && a.OutCity == outCity).ToPagedListAsync(pageNum, pageSize);
         }
     }
 }
