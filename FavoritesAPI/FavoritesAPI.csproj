@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.10.0" />
+    <PackageReference Include="MongoDB.Driver.Core" Version="2.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microservices\BusAPI.csproj" />
+    <ProjectReference Include="..\PlaneAPI\PlaneAPI.csproj" />
   </ItemGroup>
 
 </Project>

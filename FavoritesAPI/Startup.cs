@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using FavoritesAPI.Model;
+using FavoritesAPI.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace FavoritesAPI
 {
@@ -25,6 +28,11 @@ namespace FavoritesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<FavoritesDatabaseSettings>(
+                Configuration.GetSection(nameof(FavoritesDatabaseSettings)));
+            services.AddSingleton<IFavoritesDatabaseSettings>(sp =>
+            sp.GetRequiredService<IOptions<FavoritesDatabaseSettings>>().Value);
+            services.AddSingleton<FavoritesActions>();
             services.AddControllers();
         }
 
