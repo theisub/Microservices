@@ -2,11 +2,17 @@
 using GatewayAPI.FavoritesClient;
 using System;
 using FavoritesAPI.Model;
+using GatewayAPI.BusesClient;
+using GatewayAPI.PlanesClient;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using BusAPI.Model;
+using PlaneAPI.Model;
 
 namespace GatewayAPI.Controllers
 {
@@ -15,10 +21,16 @@ namespace GatewayAPI.Controllers
     public class FavoritesGatewayController : ControllerBase
     {
         private readonly IFavoritesHttpClient favoritesHttpClient;
+        private readonly IBusesHttpClient busesHttpClient;
+        private readonly IPlanesHttpClient planesHttpClient;
+        private readonly IMapper mapper;
 
-        public FavoritesGatewayController(IFavoritesHttpClient favoritesHttpClient) 
+        public FavoritesGatewayController(IFavoritesHttpClient favoritesHttpClient, IBusesHttpClient busesHttpClient, IPlanesHttpClient planesHttpClient, IMapper mapper) 
         {
             this.favoritesHttpClient = favoritesHttpClient;
+            this.busesHttpClient = busesHttpClient;
+            this.planesHttpClient = planesHttpClient;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -26,6 +38,8 @@ namespace GatewayAPI.Controllers
         {
             IActionResult result;
 
+
+            
             result = Ok(await favoritesHttpClient.GetAllAsync());
 
            
@@ -49,6 +63,9 @@ namespace GatewayAPI.Controllers
 
             return result;
         }
+
+
+       
 
         // POST: api/favoritesgateway
         [HttpPost]
@@ -77,6 +94,182 @@ namespace GatewayAPI.Controllers
             return result;
 
         }
+
+        [HttpPost("AddFavorite", Name = "GetAndPostFavoriteGatewayAll")]
+        public async Task<IActionResult> PostFavorite(string inCity = null, string outCity = null, string inCountry = null, string outCountry = null)
+        {
+            //https://localhost:44375/api/favoritesgateway/addfavorite?incity=Moscow&outcity=Berlin
+            var planesData = await planesHttpClient.GetCheapestPlanes(inCity, outCity);
+            var busesData = await busesHttpClient.GetCheapestBuses(inCity, outCity);
+
+            Favorites favorites = new Favorites();
+
+            //Favorites naFavorite = new Favorites { InCity = inCity, OutCity = outCity, InCountry = busesData[0].InCountry, OutCountry = busesData[0].OutCountry, BusesRoute = busik};
+            IEnumerable<Route> busesRoute = mapper.Map<IEnumerable<Route>>(busesData);
+            IEnumerable<Route> planesRoute = mapper.Map<IEnumerable<Route>>(planesData);
+            Favorites newFavorite = new Favorites
+            {
+                InCity = inCity,
+                OutCity = outCity,
+                InCountry = inCountry,
+                OutCountry = outCountry,
+                BusesRoute = busesRoute,
+                PlanesRoute = planesRoute
+            };
+
+
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Very important info");
+
+            IActionResult result;
+            try
+            {
+                var entity = newFavorite;
+                var newEntity = await favoritesHttpClient.PostAsync(entity);
+                result = CreatedAtAction(nameof(Post), newEntity);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            return result;
+        }
+
+
+        [HttpPost("AddBusAndFavorite", Name = "PostBusesFavoriteGatewayAll")]
+        public async Task<IActionResult> PostBusesFavorite([FromBody] Bus bus)
+        {
+            //https://localhost:44375/api/favoritesgateway/addfavorite?incity=Moscow&outcity=Berlin
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            IActionResult result;
+            try
+            {
+                var entity = bus;
+                var newEntity = await busesHttpClient.PostAsync(entity);
+                result = CreatedAtAction(nameof(Post), newEntity);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+
+            Favorites favorites = new Favorites();
+
+            List<Bus> buses = new List<Bus> { bus };
+            IEnumerable<Route> busesRoute = mapper.Map<IEnumerable<Route>>(buses);
+            Favorites newFavorite = new Favorites
+            {
+                InCity = bus.InCity,
+                OutCity = bus.OutCity,
+                InCountry = bus.InCountry,
+                OutCountry = bus.OutCountry,
+                BusesRoute = busesRoute
+            };
+
+
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Very important info");
+
+            try
+            {
+                var entity = newFavorite;
+                var newEntity = await favoritesHttpClient.PostAsync(entity);
+                result = CreatedAtAction(nameof(Post), newEntity);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            return result;
+        }
+
+
+        [HttpPost("AddPlaneAndFavorite", Name = "PostPlanesFavoriteGatewayAll")]
+        public async Task<IActionResult> PostPlanesFavorite([FromBody] Plane plane)
+        {
+            //https://localhost:44375/api/favoritesgateway/addfavorite?incity=Moscow&outcity=Berlin
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            IActionResult result;
+            try
+            {
+                var entity = plane;
+                var newEntity = await planesHttpClient.PostAsync(entity);
+                result = CreatedAtAction(nameof(Post), newEntity);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+
+            Favorites favorites = new Favorites();
+
+            List<Plane> planes = new List<Plane> { plane };
+            IEnumerable<Route> planesRoute = mapper.Map<IEnumerable<Route>>(planes);
+            Favorites newFavorite = new Favorites
+            {
+                InCity = plane.InCity,
+                OutCity = plane.OutCity,
+                InCountry = plane.InCountry,
+                OutCountry = plane.OutCountry,
+                PlanesRoute = planesRoute
+            };
+
+
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Very important info");
+
+            try
+            {
+                var entity = newFavorite;
+                var newEntity = await favoritesHttpClient.PostAsync(entity);
+                result = CreatedAtAction(nameof(Post), newEntity);
+            }
+            catch (DbUpdateException)
+            {
+                result = Conflict();
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            return result;
+        }
+
 
         // PUT: api/favoritesgateway/5
         [HttpPut("{id}")]
@@ -107,6 +300,8 @@ namespace GatewayAPI.Controllers
 
 
         }
+
+
 
         // DELETE: api/favoritesgateway/5
         [HttpDelete("{id}")]

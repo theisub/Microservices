@@ -30,6 +30,7 @@ namespace GatewayAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddAutoMapper(typeof(Mapping.MappingProfile));
             services.AddHttpClient<IBusesHttpClient, BusesHttpClient>(client =>
            {
                client.BaseAddress = new Uri("https://localhost:44331/");
