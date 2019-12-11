@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FavoritesAPI\FavoritesAPI.csproj" />
     <ProjectReference Include="..\Microservices\BusAPI.csproj" />
     <ProjectReference Include="..\PlaneAPI\PlaneAPI.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>

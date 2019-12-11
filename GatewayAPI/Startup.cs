@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using GatewayAPI.BusesClient;
 using GatewayAPI.PlanesClient;
+using GatewayAPI.FavoritesClient;
 namespace GatewayAPI
 {
     public class Startup
@@ -33,12 +34,19 @@ namespace GatewayAPI
            {
                client.BaseAddress = new Uri("https://localhost:44331/");
            });
+
             services.AddHttpClient<IPlanesHttpClient, PlanesHttpClient>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44361/");
             });
 
+            services.AddHttpClient<IFavoritesHttpClient, FavoritesHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44357/");
+            });
             
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

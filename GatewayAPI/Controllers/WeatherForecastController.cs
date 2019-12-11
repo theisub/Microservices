@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace GatewayAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("lil/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -24,7 +24,7 @@ namespace GatewayAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> Get(int id)
         {
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

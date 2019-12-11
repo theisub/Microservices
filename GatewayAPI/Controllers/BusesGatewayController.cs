@@ -17,12 +17,12 @@ namespace GatewayAPI.Controllers
     public class BusesGatewayController : ControllerBase
     {
         private readonly IBusesHttpClient busesHttpClient;
-        private readonly IMapper mapper;
 
-        public BusesGatewayController(IBusesHttpClient busesHttpClient, IMapper mapper)
+
+        public BusesGatewayController(IBusesHttpClient busesHttpClient)
         {
             this.busesHttpClient = busesHttpClient;
-            this.mapper = mapper;
+
         }
         // GET: api/BusesGateway
         [HttpGet]
@@ -158,9 +158,9 @@ namespace GatewayAPI.Controllers
             IActionResult result;
             try
             {
-                var entity = mapper.Map<Bus>(bus);
+                var entity = bus;
                 var newEntity = await busesHttpClient.PostAsync(entity);
-                result = CreatedAtAction(nameof(Post), mapper.Map<Bus>(newEntity));
+                result = CreatedAtAction(nameof(Post), newEntity);
             }
             catch (DbUpdateException)
             {

@@ -5,6 +5,11 @@ using FavoritesAPI.Services;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+
+using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -54,10 +59,35 @@ namespace FavoritesAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]Favorites favorite)
         {
-            await favoritesActions.Create(favorite);
-            IActionResult result; 
-            result = CreatedAtRoute("GetFavorite", new { id = favorite.Id.ToString() }, favorite);
-            return Ok(result);
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine($"Bad request, dto: {JsonConvert.SerializeObject(favorite)}");
+                return BadRequest(ModelState);
+            }
+
+
+            IActionResult result;
+            
+            try
+            {
+                var entity = favorite;
+                var newEntity = await favoritesActions.Create(favorite);
+                result = CreatedAtAction(nameof(Create), newEntity);
+            }
+            catch(DbUpdateException)
+            {
+                result = Conflict();
+
+
+            }
+            catch (Exception ex)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+
+            }
+
+            return result;
+
         }
 
         // PUT api/<controller>/5

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,12 +19,10 @@ namespace GatewayAPI.Controllers
     public class PlanesGatewayController : ControllerBase
     {
         private readonly IPlanesHttpClient planesHttpClient;
-        private readonly IMapper mapper;
 
-        public PlanesGatewayController(IPlanesHttpClient planesHttpClient, IMapper mapper)
+        public PlanesGatewayController(IPlanesHttpClient planesHttpClient)
         {
             this.planesHttpClient = planesHttpClient;
-            this.mapper = mapper;
         }
         // GET: api/PlanesGateway
         [HttpGet]
@@ -48,6 +47,12 @@ namespace GatewayAPI.Controllers
         [HttpGet("{id}", Name = "GetPlanes")]
         public string Get(int id)
         {
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Very important info");
+
             return "value etogogateway planes";
         }
 
@@ -161,7 +166,7 @@ namespace GatewayAPI.Controllers
             {
                 var entity =plane;
                 var newEntity = await planesHttpClient.PostAsync(entity);
-                result = CreatedAtAction(nameof(Post), mapper.Map<Plane>(newEntity));
+                result = CreatedAtAction(nameof(Post), newEntity);
             }
             catch (DbUpdateException)
             {
