@@ -63,7 +63,7 @@ namespace BusAPI.Controllers
         {
             var buses = await busActions.GetAllBusesByCompany(company,pageNum,pageSize);
 
-            if (buses == null)
+            if (buses.Count() == 0)
             {
                 return NotFound($"Problemes with {company}");
             }
@@ -77,7 +77,7 @@ namespace BusAPI.Controllers
         {
             var buses = await busActions.GetAllBusesByRoute(inCity,outCity,pageNum,pageSize);
 
-            if (buses == null)
+            if (buses.Count()==0)
             {
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
