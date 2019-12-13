@@ -1,6 +1,5 @@
 sudo: true
 language: csharp
-dist: xenial
 mono: none
 dotnet: 3.0
 
