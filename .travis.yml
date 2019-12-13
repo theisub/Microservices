@@ -1,5 +1,6 @@
 sudo: true
 language: csharp
+dist: bionic
 mono: none
 dotnet: 3.0
 solution: Microservices.sln
