@@ -1,0 +1,17 @@
+sudo: true
+language: csharp
+mono: none
+solution: Microservices.sln
+
+addons:
+  snaps:
+  - name: dotnet-sdk
+    classic: true
+    channel: latest/beta
+    
+script:
+- sudo snap alias dotnet-sdk.dotnet dotnet
+- dotnet --version
+- dotnet restore 
+- dotnet build 
+- dotnet test WebApiTest/WebApiTest.csproj
