@@ -158,7 +158,7 @@ namespace PlaneAPI.Controllers
             }
             catch (Exception ex)
             {
-                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                result = StatusCode(StatusCodes.Status500InternalServerError, "Error posting Plane!");
             }
             return result;
 

@@ -63,7 +63,7 @@ namespace BusAPI.Controllers
         {
             var buses = await busActions.GetAllBusesByCompany(company,pageNum,pageSize);
 
-            if (buses.Count() == 0)
+            if (buses == null)
             {
                 return NotFound($"Problemes with {company}");
             }
@@ -77,7 +77,7 @@ namespace BusAPI.Controllers
         {
             var buses = await busActions.GetAllBusesByRoute(inCity,outCity,pageNum,pageSize);
 
-            if (buses.Count()==0)
+            if (buses == null)
             {
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
@@ -110,7 +110,7 @@ namespace BusAPI.Controllers
 
             var buses = await busActions.GetCheapestBuses(inCity, outCity,pageNum,pageSize);
 
-            if (buses == null)
+            if (buses  == null)
             {
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
@@ -158,7 +158,7 @@ namespace BusAPI.Controllers
             }
             catch (Exception ex)
             {
-                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                result = StatusCode(StatusCodes.Status500InternalServerError, "Error posting bus!");
             }
             return result;
 
