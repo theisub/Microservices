@@ -16,19 +16,51 @@ namespace GatewayAPI.PlanesClient
             this.client = client;
 
         }
-        public async Task<string> GetAsync(long id)
+        public async Task<List<Plane>> GetAsync()
         {
             HttpResponseMessage response;
             string url = $"/api/planes/";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await client.SendAsync(request);
 
-            var resultBody = await response.Content.ReadAsStringAsync();
+            List<Plane> result;
 
+            var resultContent = await response.Content.ReadAsStringAsync();
 
-            return resultBody;
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<List<Plane>>(resultContent);
+            }
+            else
+            {
+                throw new Exception("GetAllPlanes failed to get");
+            }
+
+            return result;
         }
+        public async Task<Plane> GetIdAsync(long id)
+        {
+            HttpResponseMessage response;
+            string url = $"/api/planes/{id}";
+            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                response = await client.SendAsync(request);
 
+            Plane result;
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<Plane>(resultContent);
+            }
+            else
+            {
+                throw new Exception("GetPlanesById failed to get");
+            }
+
+
+            return result;
+        }
 
         public async Task<List<Plane>> GetAllPlanesByCompany(string companyName, int pageNum = 1, int pageSize = 10)
         {

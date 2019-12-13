@@ -29,10 +29,18 @@ namespace BusAPI.Controllers
 
             if (buses == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetAllBuses method failed");
                 return NotFound($"Problemes with getting buses");
             }
             var result = buses;
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetAllBuses method activated");
             return Ok(result);
         }
 
@@ -44,9 +52,17 @@ namespace BusAPI.Controllers
             var bus = await busActions.GetBusAsync(id);
             if (bus == null)
             {
-
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetById method failed");
                 return NotFound($"Problemes finding plane with id:{id}");
             }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetAllBuses method activated");
             return Ok(bus);
         }
 
@@ -65,10 +81,17 @@ namespace BusAPI.Controllers
 
             if (buses == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetBusesByCompany method failed");
                 return NotFound($"Problemes with {company}");
             }
             var result = buses;
-
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetBusesByCompany method activated");
             return Ok(result);
         }
 
@@ -79,10 +102,18 @@ namespace BusAPI.Controllers
 
             if (buses == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetBusesByRoute method failed");
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
             var result = buses;
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetBusesByRoute method activated");
             return Ok(result);
         }
 
@@ -96,10 +127,18 @@ namespace BusAPI.Controllers
 
             if (buses == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetAllBusesByPrice method failed");
                 return NotFound($"Problemes with {minPrice} and {maxPrice}");
             }
             var result = buses;
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetAllBusesByPrice method activated");
             return Ok(result);
         }
         //api/buses/cheapestRoute?inCity=Moscow&outCity=Paris&size=10
@@ -112,9 +151,18 @@ namespace BusAPI.Controllers
 
             if (buses  == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetCheapestBuses method failed");
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
             var result = buses;
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetCheapestBuses method activated");
 
             return Ok(result);
         }
@@ -129,9 +177,17 @@ namespace BusAPI.Controllers
 
             if (buses == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetFastestBuses method failed");
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
             var result =buses;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetFastestBuses method activated");
 
             return Ok(result);
         }
@@ -151,14 +207,26 @@ namespace BusAPI.Controllers
                 var entity =bus;
                 var newEntity = await busActions.AddBusAsync(entity);
                 result = CreatedAtAction(nameof(Post), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post  method activated");
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post  method failed: dbException");
             }
             catch (Exception)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, "Error posting bus!");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post method failed: Exception");
             }
             return result;
 
@@ -178,7 +246,12 @@ namespace BusAPI.Controllers
             var findBus = await busActions.GetBusAsync(id);
             if (findBus == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Put method failed: not getting bus by Id");
                 return NotFound($"Problemes finding {id}");
+               
             }
 
 
@@ -188,14 +261,27 @@ namespace BusAPI.Controllers
                 entity.Id = id;
                 await busActions.UpdateBusAsync(entity);
                 result = Ok(bus);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Put  method activated");
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Put  method failed: dbException");
+
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Put method failed: Exception");
             }
             return result;
         }
@@ -213,9 +299,18 @@ namespace BusAPI.Controllers
             var deletedBus= await busActions.DeleteBusAsync(id);
             if (deletedBus == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Delete method failed");
                 return NotFound($"Problemes deleting {id}");
+
             }
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Delete  method activated");
             return Ok(deletedBus);
         }
     }

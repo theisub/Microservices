@@ -6,7 +6,8 @@ namespace GatewayAPI.PlanesClient
 {
     public interface IPlanesHttpClient
     {
-        Task<string> GetAsync(long id);
+        Task<List<Plane>> GetAsync();
+        Task<Plane> GetIdAsync(long id);
         Task<Plane> PostAsync(Plane plane);
         Task<Plane> PutAsync(long id,Plane plane);
         Task<Plane> DeleteAsync(long id);

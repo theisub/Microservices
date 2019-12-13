@@ -19,17 +19,51 @@ namespace GatewayAPI.BusesClient
             this.client = client;
 
         }
-        public async Task<string> GetAsync(long id)
+        public async Task<List<Bus>> GetAsync()
         {
             HttpResponseMessage response;
             string url = $"/api/buses/";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await client.SendAsync(request);
 
-            var resultBody = await response.Content.ReadAsStringAsync();
+            List<Bus> result;
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<List<Bus>>(resultContent);
+            }
+            else
+            {
+                throw new Exception("GetAllBuses failed to get");
+            }
+
+            return result;
+        }
+
+        public async Task<Bus> GetIdAsync(long id)
+        {
+            HttpResponseMessage response;
+            string url = $"/api/buses/{id}";
+            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                response = await client.SendAsync(request);
+
+            Bus result;
+
+            var resultContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<Bus>(resultContent);
+            }
+            else
+            {
+                throw new Exception("GetAllBusesByCompany failed to get");
+            }
 
 
-            return resultBody;
+            return result;
         }
 
 

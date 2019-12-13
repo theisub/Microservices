@@ -26,34 +26,57 @@ namespace GatewayAPI.Controllers
         }
         // GET: api/PlanesGateway
         [HttpGet]
-        public async Task<string> Get()
+        public async Task<IActionResult> Get()
         {
-            string resultik;
+            IActionResult result;
             try
             {
-                resultik = await planesHttpClient.GetAsync(1111);
+                result = Ok(await planesHttpClient.GetAsync());
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get all method activated");
 
             }
-            catch
+            catch(Exception ex)
             {
-                resultik = "well u fucked up with planes";
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Get all method exception {ex.Message}");
+                return BadRequest();
             }
 
-            return resultik;
-            //return new string[] { "value1 etogateway  ", "value2 etogateway " };
+            return result;
         }
 
         // GET: api/PlanesGateway/5
-        [HttpGet("{id}", Name = "GetPlanes")]
-        public string Get(int id)
+        [HttpGet("{id}", Name = "GetPlanesById")]
+        public async Task<IActionResult> GetId(int id)
         {
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("LoggerInfo:");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("Very important info");
+            IActionResult result;
 
-            return "value etogogateway planes";
+            try
+            {
+                result = Ok(await planesHttpClient.GetIdAsync(id));
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get planesById method activated");
+
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Get planesById method exception {ex.Message}");
+                return BadRequest();
+            }
+
+            return result;
+
         }
 
         //PlanesGateway/companies/Anyname
@@ -66,10 +89,18 @@ namespace GatewayAPI.Controllers
             {
                 var PlanesByCompany = await planesHttpClient.GetAllPlanesByCompany(company);
                 result = Ok(PlanesByCompany);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetPlanesByCompanyGateway method activated");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Get GetPlanesByCompanyGateway method exception {ex.Message}");
             }
             return result;
 
@@ -85,10 +116,18 @@ namespace GatewayAPI.Controllers
             {
                 var PlanesByPrice = await planesHttpClient.GetAllPlanesByPrice(minPrice, maxPrice);
                 result = Ok(PlanesByPrice);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetAllPlanesByPriceGateway method activated");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Get GetAllPlanesByPriceGateway method exception {ex.Message}");
             }
             return result;
 
@@ -103,10 +142,18 @@ namespace GatewayAPI.Controllers
             {
                 var PlanesByRoute = await planesHttpClient.GetAllPlanesByRoute(inCity, outCity,pageNum,pageSize);
                 result = Ok(PlanesByRoute);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetPlanesByRouteGateway method activated");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Get GetPlanesByRouteGateway method exception {ex.Message}");
             }
             return result;
 
@@ -121,10 +168,18 @@ namespace GatewayAPI.Controllers
             {
                 var PlanesByTime = await planesHttpClient.GetFastestPlanes(inCity, outCity, pageNum,pageSize);
                 result = Ok(PlanesByTime);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetFastestPlanesGateway method activated");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Get GetFastestPlanesGateway method exception {ex.Message}");
             }
             return result;
 
@@ -139,10 +194,18 @@ namespace GatewayAPI.Controllers
             {
                 var PlanesByCost = await planesHttpClient.GetCheapestPlanes(inCity, outCity, pageNum,pageSize);
                 result = Ok(PlanesByCost);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetCheapestPlanesGateway method activated");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Get GetCheapestPlanesGateway method exception {ex.Message}");
             }
             return result;
 
@@ -167,14 +230,26 @@ namespace GatewayAPI.Controllers
                 var entity =plane;
                 var newEntity = await planesHttpClient.PostAsync(entity);
                 result = CreatedAtAction(nameof(Post), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post method activated");
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException dbEx)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method dbexception {dbEx.Message}");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method exception {ex.Message}");
             }
             return result;
 
@@ -195,14 +270,26 @@ namespace GatewayAPI.Controllers
                 var entity = plane;
                 var newEntity = await planesHttpClient.PutAsync(id, entity);
                 result = CreatedAtAction(nameof(Put), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Put method activated");
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException dbEx)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Put method dbexception {dbEx.Message}");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Put method exception {ex.Message}");
             }
             return result;
 
@@ -226,14 +313,26 @@ namespace GatewayAPI.Controllers
                
                 var newEntity = await planesHttpClient.DeleteAsync(id);
                 result = CreatedAtAction(nameof(Put), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post method activated");
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException dbEx)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Put method dbexception {dbEx.Message}");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Put method exception {ex.Message}");
             }
             return result;
         }

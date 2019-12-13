@@ -42,7 +42,11 @@ namespace GatewayAPI.Controllers
             
             result = Ok(await favoritesHttpClient.GetAllAsync());
 
-           
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get all method activated");
+
 
             return result;
             //return new string[] { "value1 etogateway  ", "value2 etogateway " };
@@ -56,7 +60,7 @@ namespace GatewayAPI.Controllers
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("LoggerInfo:");
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("Very important info");
+            Console.WriteLine($"Get method by Id activated with id {id}");
             IActionResult result;
 
             result = Ok(await favoritesHttpClient.GetAsync(id));
@@ -73,6 +77,11 @@ namespace GatewayAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method is not with valid Model state");
                 return BadRequest(ModelState);
             }
 
@@ -82,14 +91,28 @@ namespace GatewayAPI.Controllers
                 var entity = favorite;
                 var newEntity = await favoritesHttpClient.PostAsync(entity);
                 result = CreatedAtAction(nameof(Post), newEntity);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method  successfully created entity{entity}");
             }
             catch (DbUpdateException)
             {
+
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method DbUpdateException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method internal exception");
             }
             return result;
 
@@ -130,14 +153,26 @@ namespace GatewayAPI.Controllers
                 var entity = newFavorite;
                 var newEntity = await favoritesHttpClient.PostAsync(entity);
                 result = CreatedAtAction(nameof(Post), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method of GetAndPostFavoriteGatewayAll: successfully created entity{entity}");
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method of GetAndPostFavoriteGatewayAll: DbUpdateException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method of GetAndPostFavoriteGatewayAll: internal exception");
             }
             return result;
         }
@@ -158,14 +193,27 @@ namespace GatewayAPI.Controllers
                 var entity = bus;
                 var newEntity = await busesHttpClient.PostAsync(entity);
                 result = CreatedAtAction(nameof(Post), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method for Buses of PostBusesFavoriteGatewayAll: successfully created entity{entity}");
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method for Buses of PostBusesFavoriteGatewayAll: DbUpdateException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method for Buses of PostBusesFavoriteGatewayAll: internal exception");
             }
 
 
@@ -184,24 +232,32 @@ namespace GatewayAPI.Controllers
 
 
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("LoggerInfo:");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("Very important info");
-
             try
             {
                 var entity = newFavorite;
                 var newEntity = await favoritesHttpClient.PostAsync(entity);
                 result = CreatedAtAction(nameof(Post), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method of PostBusesFavoriteGatewayAll: successfully created entity{entity}");
+
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method of PostBusesFavoriteGatewayAll: DbUpdateException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method  of PostBusesFavoriteGatewayAll: internal exception");
             }
             return result;
         }
@@ -222,14 +278,26 @@ namespace GatewayAPI.Controllers
                 var entity = plane;
                 var newEntity = await planesHttpClient.PostAsync(entity);
                 result = CreatedAtAction(nameof(Post), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method for Planes of PostPlanesFavoriteGatewayAll: successfully created entity{entity}");
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method for Planes of PostPlanesFavoriteGatewayAll: DbUpdateException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method for Planes of PostPlanesFavoriteGatewayAll: internal exception");
             }
 
 
@@ -258,14 +326,26 @@ namespace GatewayAPI.Controllers
                 var entity = newFavorite;
                 var newEntity = await favoritesHttpClient.PostAsync(entity);
                 result = CreatedAtAction(nameof(Post), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method of PostPlanesFavoriteGatewayAll: successfully created entity{entity}");
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method of PostPlanesFavoriteGatewayAll: DbUpdateException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method of PostPlanesFavoriteGatewayAll: internal exception");
             }
             return result;
         }
@@ -286,14 +366,26 @@ namespace GatewayAPI.Controllers
                 var entity = ravorite;
                 var newEntity = await favoritesHttpClient.PutAsync(id, entity);
                 result = CreatedAtAction(nameof(Put), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Put method successfully created entity{entity}");
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Put method: DbUpdateException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Put method: internal exception");
             }
             return result;
 
@@ -319,14 +411,26 @@ namespace GatewayAPI.Controllers
 
                 var newEntity = await favoritesHttpClient.DeleteAsync(id);
                 result = CreatedAtAction(nameof(Delete), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Delete method successfully deleted entity {newEntity}");
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Delete method: DbUpdateException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Delete method: internal exception");
             }
             return result;
         }

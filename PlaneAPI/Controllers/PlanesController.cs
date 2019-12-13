@@ -28,9 +28,18 @@ namespace PlaneAPI.Controllers
 
             if (planes == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetAllPlanes method failed");
                 return NotFound($"Problemes with getting planes");
+                
             }
             var result = planes;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get AllPlanes method activated");
 
             return Ok(result);
         }
@@ -43,9 +52,16 @@ namespace PlaneAPI.Controllers
             var plane = await planeActions.GetPlaneAsync(id);
             if (plane == null)
             {
-
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetAPlanesByID method failed");
                 return NotFound($"Problemes finding plane with id:{id}");
             }
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetAPlanesByID method activated");
             return Ok(plane);
                
         }
@@ -65,9 +81,19 @@ namespace PlaneAPI.Controllers
 
             if (planes == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetPlanesByCompany method failed");
                 return NotFound($"Problemes with {company}");
+               
             }
             var result =planes;
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetPlanesByCompany method activated");
 
             return Ok(result);
         }
@@ -79,10 +105,18 @@ namespace PlaneAPI.Controllers
 
             if (planes == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetPlanesByRoute method failed");
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
             var result = planes;
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetPlanesByRoute method activated");
             return Ok(result);
         }
 
@@ -96,9 +130,18 @@ namespace PlaneAPI.Controllers
 
             if (planes == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetAllPlanesByPrice method failed");
                 return NotFound($"Problemes with {minPrice} and {maxPrice}");
             }
             var result = planes;
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetAllPlanesByPrice method activated");
 
             return Ok(result);
         }
@@ -112,9 +155,17 @@ namespace PlaneAPI.Controllers
 
             if (planes == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetCheapestPlanes method failed");
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
             var result = planes;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetCheapestPlanes method activated");
 
             return Ok(result);
         }
@@ -129,9 +180,17 @@ namespace PlaneAPI.Controllers
 
             if (buses == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetFastestPlanes method failed");
                 return NotFound($"Problemes with {inCity} and {outCity}");
             }
             var result = buses;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get GetFastestPlanes method activated");
 
             return Ok(result);
         }
@@ -151,14 +210,26 @@ namespace PlaneAPI.Controllers
                 var entity = plane;
                 var newEntity = await planeActions.AddPlaneAsync(entity);
                 result = CreatedAtAction(nameof(Post), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetFastestPlanes method activated");
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetFastestPlanes method failed: dbException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, "Error posting Plane!");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get GetFastestPlanes method failed: Exception");
             }
             return result;
 
@@ -172,12 +243,17 @@ namespace PlaneAPI.Controllers
 
             if (!ModelState.IsValid)
             {
+
                 return BadRequest(ModelState);
             }
 
             var findPlane = await planeActions.GetPlaneAsync(id);
             if (findPlane== null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post method failed");
                 return NotFound($"Problemes finding {id}") ;
             }
 
@@ -189,14 +265,26 @@ namespace PlaneAPI.Controllers
                 entity.Id = id;
                 await planeActions.UpdatePlaneAsync(entity);
                 result = Ok(plane);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post  method activated");
             }
             catch (DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post method failed: dbException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post  method failed: exception");
             }
             return result;
         }
@@ -214,9 +302,17 @@ namespace PlaneAPI.Controllers
             var deletedPlane = await planeActions.DeletePlaneAsync(id);
             if (deletedPlane == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Delete method failed");
                 return NotFound($"Problemes deleting {id}");
             }
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Delete method activated");
             return Ok(deletedPlane);
         }
     }

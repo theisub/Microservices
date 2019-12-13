@@ -26,20 +26,25 @@ namespace GatewayAPI.Controllers
         }
         // GET: api/BusesGateway
         [HttpGet]
-        public async Task<string> Get()
+        public async Task<IActionResult> Get()
         {
-            string resultik;
+            IActionResult result;
             try
             {
-                resultik = await busesHttpClient.GetAsync(1111);
-                
+                result = Ok(await busesHttpClient.GetAsync());
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get method activated");
             }
-            catch
+            catch(Exception ex)
             {
-              resultik="well u fucked up";
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Get method Exception {ex.Message} ");
+                return BadRequest();
             }
 
-            return resultik;
+            return result;
             //return new string[] { "value1 etogateway  ", "value2 etogateway " };
         }
 
@@ -60,10 +65,17 @@ namespace GatewayAPI.Controllers
             {
                 var busesByCompany = await busesHttpClient.GetAllBusesByCompany(company,pageNum,pageSize);
                 result = Ok(busesByCompany);
+
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("GetBusesByCompanyGateway method activated");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"GetBusesByCompanyGateway method exception {ex.Message}");
             }
             return result;
 
@@ -79,10 +91,16 @@ namespace GatewayAPI.Controllers
             {
                 var busesByPrice = await busesHttpClient.GetAllBusesByPrice(minPrice,maxPrice, pageNum, pageSize);
                 result = Ok(busesByPrice);
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("GetAllBusesByPriceGateway method activated");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"GetAllBusesByPriceGateway method exception {ex.Message}");
             }
             return result;
 
@@ -97,10 +115,16 @@ namespace GatewayAPI.Controllers
             {
                 var busesByRoute = await busesHttpClient.GetAllBusesByRoute(inCity, outCity, pageNum, pageSize);
                 result = Ok(busesByRoute);
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("GetBusesByRouteGateway method activated");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"GetBusesByRouteGateway method exception {ex.Message}");
             }
             return result;
 
@@ -115,10 +139,16 @@ namespace GatewayAPI.Controllers
             {
                 var busesByTime = await busesHttpClient.GetFastestBuses(inCity, outCity, pageNum, pageSize);
                 result = Ok(busesByTime);
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("GetFastestBusesGateway method activated");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"GetFastestBusesGateway method exception {ex.Message}");
             }
             return result;
 
@@ -133,10 +163,16 @@ namespace GatewayAPI.Controllers
             {
                 var busesByCost = await busesHttpClient.GetCheapestBuses(inCity, outCity, pageNum, pageSize);
                 result = Ok(busesByCost);
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("GetCheapestBusesGateway method activated");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"GetCheapestBusesGateway method exception {ex.Message}");
             }
             return result;
 
@@ -161,14 +197,23 @@ namespace GatewayAPI.Controllers
                 var entity = bus;
                 var newEntity = await busesHttpClient.PostAsync(entity);
                 result = CreatedAtAction(nameof(Post), newEntity);
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post method activated");
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException dbEx)
             {
                 result = Conflict();
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method exception {dbEx.Message}");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Post method exception {ex.Message}");
             }
             return result;
 
@@ -189,14 +234,23 @@ namespace GatewayAPI.Controllers
                 var entity = plane;
                 var newEntity = await busesHttpClient.PutAsync(id, entity);
                 result = CreatedAtAction(nameof(Put), newEntity);
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Put method activated");
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException dbEx)
             {
                 result = Conflict();
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Put method exception {dbEx.Message}");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Put method exception {ex.Message}");
             }
             return result;
 
@@ -220,14 +274,23 @@ namespace GatewayAPI.Controllers
 
                 var newEntity = await busesHttpClient.DeleteAsync(id);
                 result = CreatedAtAction(nameof(Put), newEntity);
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Delete method activated");
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException dbEx)
             {
                 result = Conflict();
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Delete method exception {dbEx.Message}");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Delete method exception {ex.Message}");
             }
             return result;
         }

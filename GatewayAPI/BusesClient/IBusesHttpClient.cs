@@ -8,7 +8,8 @@ namespace GatewayAPI.BusesClient
 {
     public interface IBusesHttpClient
     {
-        Task<string> GetAsync(long id);
+        Task<List<Bus>> GetAsync();
+        Task<Bus> GetIdAsync(long id);
         Task<Bus> PostAsync(Bus bus);
         Task<Bus> PutAsync(long id, Bus bus);
         Task<Bus> DeleteAsync(long id);

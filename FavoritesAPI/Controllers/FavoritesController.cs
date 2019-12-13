@@ -33,10 +33,18 @@ namespace FavoritesAPI.Controllers
             var favorites = await favoritesActions.Get();
             if (favorites == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Get method failed");
                 return NotFound($"Problemes with getting buses");
             }
             var result = favorites;
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Get method activated");
             return Ok(result);
         }
 
@@ -48,10 +56,18 @@ namespace FavoritesAPI.Controllers
 
             if (favorite == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("GetByID method failed");
                 return NotFound();
             }
             var result = favorite;
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("GetByID method activated");
             return Ok(result);
         }
 
@@ -61,7 +77,6 @@ namespace FavoritesAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                Console.WriteLine($"Bad request, dto: {JsonConvert.SerializeObject(favorite)}");
                 return BadRequest(ModelState);
             }
 
@@ -70,20 +85,32 @@ namespace FavoritesAPI.Controllers
             
             try
             {
+
                 var entity = favorite;
                 var newEntity = await favoritesActions.Create(favorite);
                 result = CreatedAtAction(nameof(Create), newEntity);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post method activated");
             }
             catch(DbUpdateException)
             {
                 result = Conflict();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post method failed: dbException");
 
 
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Post method failed: Exception");
             }
 
             return result;
@@ -99,11 +126,20 @@ namespace FavoritesAPI.Controllers
 
             if (favorite == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Put method failed");
                 return NotFound();
             }
             favoriteIn.Id = id;
             favoritesActions.Update(id, favoriteIn);
 
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Put method activated");
             return NoContent();
         }
 
@@ -115,10 +151,19 @@ namespace FavoritesAPI.Controllers
 
             if (favorite == null)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Delete method failed");
                 return NotFound();
             }
             
             favoritesActions.Remove(id);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("LoggerInfo:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Delete method activated");
 
             return NoContent();
         }
