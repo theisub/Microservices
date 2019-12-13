@@ -6,9 +6,6 @@ using System.Collections.Generic;
 using Moq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Http;
-using System.Net;
-using System.Web.Http.Results;
 using Microsoft.EntityFrameworkCore;
 namespace WebApiTest
 {
@@ -31,7 +28,7 @@ namespace WebApiTest
             var createdResult = actionResult as OkObjectResult;
 
 
-            Assert.Equal(createdResult.StatusCode, 200);
+            Assert.Equal(200, createdResult.StatusCode);
 
         }
 
@@ -52,7 +49,7 @@ namespace WebApiTest
             var createdResult = actionResult as NotFoundObjectResult;
 
 
-            Assert.Equal(createdResult.StatusCode, 404);
+            Assert.Equal(404, createdResult.StatusCode);
 
 
 

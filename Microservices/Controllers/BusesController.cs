@@ -156,7 +156,7 @@ namespace BusAPI.Controllers
             {
                 result = Conflict();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, "Error posting bus!");
             }

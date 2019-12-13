@@ -19,9 +19,9 @@ namespace FavoritesAPI.Controllers
     public class FavoritesController : Controller
     {
 
-        private readonly FavoritesActions favoritesActions;
+        private readonly IFavoritesActions favoritesActions;
 
-        public FavoritesController (FavoritesActions favoritesActions)
+        public FavoritesController (IFavoritesActions favoritesActions)
         {
             this.favoritesActions = favoritesActions;
         }
@@ -94,7 +94,7 @@ namespace FavoritesAPI.Controllers
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Update(string id, [FromBody]Favorites favoriteIn)
         {
-            var favorite = favoritesActions.Get(id);
+            var favorite = await favoritesActions.Get(id);
 
 
             if (favorite == null)
@@ -111,7 +111,7 @@ namespace FavoritesAPI.Controllers
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var favorite = favoritesActions.Get(id);
+            var favorite = await favoritesActions.Get(id);
 
             if (favorite == null)
             {

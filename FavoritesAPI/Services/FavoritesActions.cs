@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FavoritesAPI.Services
 {
-    public class FavoritesActions
+    public class FavoritesActions : IFavoritesActions
     {
         private readonly IMongoCollection<Favorites> favorites;
 
