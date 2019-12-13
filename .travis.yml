@@ -1,8 +1,6 @@
 sudo: true
 language: csharp
-os: osx
 mono: none
-dotnet: 3.0
 solution: Microservices.sln
 
 script:
