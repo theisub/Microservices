@@ -32,7 +32,7 @@ namespace FavoritesAPI
                 Configuration.GetSection(nameof(FavoritesDatabaseSettings)));
             services.AddSingleton<IFavoritesDatabaseSettings>(sp =>
             sp.GetRequiredService<IOptions<FavoritesDatabaseSettings>>().Value);
-            services.AddSingleton<FavoritesActions>();
+            services.AddTransient<IFavoritesActions,FavoritesActions>();
             services.AddControllers();
         }
 
