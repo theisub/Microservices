@@ -8,8 +8,8 @@ namespace GatewayAPI.FavoritesClient
 {
     public interface IFavoritesHttpClient
     {
-        Task<string> GetAllAsync();
-        Task<string> GetAsync(long id);
+        Task<List<Favorites>> GetAllAsync();
+        Task<Favorites> GetAsync(long id);
         Task<Favorites> PostAsync(Favorites favorite);
         Task<Favorites> PutAsync(string id, Favorites favorite);
         Task<Favorites> DeleteAsync(string id);

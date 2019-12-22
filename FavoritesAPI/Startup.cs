@@ -34,6 +34,8 @@ namespace FavoritesAPI
             sp.GetRequiredService<IOptions<FavoritesDatabaseSettings>>().Value);
             services.AddTransient<IFavoritesActions,FavoritesActions>();
             services.AddControllers();
+            services.AddCors();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +49,9 @@ namespace FavoritesAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(
+               options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+           );
 
             app.UseAuthorization();
 

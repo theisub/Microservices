@@ -9,6 +9,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using GatewayAPI.FavoritesClient;
+using FavoritesAPI.Model;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,10 +21,12 @@ namespace GatewayAPI.Controllers
     public class PlanesGatewayController : ControllerBase
     {
         private readonly IPlanesHttpClient planesHttpClient;
+        private readonly IFavoritesHttpClient favoritesHttpClient;
 
-        public PlanesGatewayController(IPlanesHttpClient planesHttpClient)
+        public PlanesGatewayController(IPlanesHttpClient planesHttpClient, IFavoritesHttpClient favoritesHttpClient)
         {
             this.planesHttpClient = planesHttpClient;
+            this.favoritesHttpClient = favoritesHttpClient;
         }
         // GET: api/PlanesGateway
         [HttpGet]
@@ -317,6 +321,18 @@ namespace GatewayAPI.Controllers
                 Console.WriteLine("LoggerInfo:");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("Post method activated");
+
+                var checkFavorites = await favoritesHttpClient.GetAllAsync();
+                var checking = checkFavorites.Where(x => x.PlanesRoute.All(y => y.Id == id)).ToList();
+
+                foreach (Favorites item in checking)
+                {
+                    var newPlanesRoute = item.PlanesRoute.Where(route => route.Id != id).ToList();
+                    item.PlanesRoute = newPlanesRoute;
+                    await favoritesHttpClient.PutAsync(item.Id, item);
+                }
+
+
             }
             catch (DbUpdateException dbEx)
             {

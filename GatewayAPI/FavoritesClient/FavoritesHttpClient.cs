@@ -20,30 +20,54 @@ namespace GatewayAPI.FavoritesClient
 
 
 
-        public async Task<string> GetAllAsync()
+        public async Task<List<Favorites>> GetAllAsync()
         {
             HttpResponseMessage response;
             string url = $"/api/favorites/";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await client.SendAsync(request);
 
+
+            List<Favorites> result;
+
             var resultBody = await response.Content.ReadAsStringAsync();
 
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<List<Favorites>>(resultBody);
+            }
+            else
+            {
+                throw new Exception("GetAllFavorites failed to get");
+            }
 
-            return resultBody;
+
+            return result;
         }
 
-        public async Task<string> GetAsync(long id)
+        public async Task<Favorites> GetAsync(long id)
         {
             HttpResponseMessage response;
             string url = $"/api/favorites/{id}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 response = await client.SendAsync(request);
 
+            Favorites result;
+
             var resultBody = await response.Content.ReadAsStringAsync();
 
+            if (response.IsSuccessStatusCode)
+            {
+                result = JsonConvert.DeserializeObject<Favorites>(resultBody);
+            }
+            else
+            {
+                throw new Exception("GetFavoritesById failed to get");
+            }
 
-            return resultBody;
+
+
+            return result;
 
 
         }

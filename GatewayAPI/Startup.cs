@@ -45,7 +45,8 @@ namespace GatewayAPI
             {
                 client.BaseAddress = new Uri("https://localhost:44357/");
             });
-            
+            services.AddCors();
+
 
 
         }
@@ -61,7 +62,9 @@ namespace GatewayAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors(
+               options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+           );
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

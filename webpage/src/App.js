@@ -6,6 +6,9 @@ import SearchPage from './Search/SearchPage';
   
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';  
 import './App.css';  
+import FavoritesPage from './Favorites/FavoritesPage';
+
+
 function App() {  
   return (  
     <Router>  
@@ -21,7 +24,10 @@ function App() {
               </li>
               <li className="nav-item">  
                 <Link to={'/search'} className="nav-link"> Search routes</Link>  
-              </li>   
+              </li>
+              <li className="nav-item">  
+                <Link to={'/favorites'} className="nav-link"> Favorites</Link>  
+              </li>      
             </ul>  
           </div>  
         </nav> <br />  
@@ -29,6 +35,8 @@ function App() {
           <Route exact path='/Addbus' component={AddBus} />  
           <Route path='/Buslist' component={BusList} />
           <Route path='/search' component={SearchPage} />
+          <Route path='/favorites' component={FavoritesPage} />
+
           <Route path='/:id' component={EditBus} />    
         </Switch>  
       </div>  

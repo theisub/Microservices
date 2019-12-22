@@ -121,9 +121,11 @@ namespace GatewayAPI.Controllers
         [HttpPost("AddFavorite", Name = "GetAndPostFavoriteGatewayAll")]
         public async Task<IActionResult> PostFavorite(string inCity = null, string outCity = null, string inCountry = null, string outCountry = null)
         {
-            //https://localhost:44375/api/favoritesgateway/addfavorite?incity=Moscow&outcity=Berlin
+            //https://localhost:44375/api/favoritesgateway/addfavorite?incity=Moscow&outcity=Paris
             var planesData = await planesHttpClient.GetCheapestPlanes(inCity, outCity);
             var busesData = await busesHttpClient.GetCheapestBuses(inCity, outCity);
+
+
 
             Favorites favorites = new Favorites();
 
@@ -192,6 +194,7 @@ namespace GatewayAPI.Controllers
             {
                 var entity = bus;
                 var newEntity = await busesHttpClient.PostAsync(entity);
+                bus = newEntity;
                 result = CreatedAtAction(nameof(Post), newEntity);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("LoggerInfo:");
@@ -218,7 +221,7 @@ namespace GatewayAPI.Controllers
 
 
             Favorites favorites = new Favorites();
-
+            var emptyPlane = new List<Route>();
             List<Bus> buses = new List<Bus> { bus };
             IEnumerable<Route> busesRoute = mapper.Map<IEnumerable<Route>>(buses);
             Favorites newFavorite = new Favorites
@@ -227,7 +230,8 @@ namespace GatewayAPI.Controllers
                 OutCity = bus.OutCity,
                 InCountry = bus.InCountry,
                 OutCountry = bus.OutCountry,
-                BusesRoute = busesRoute
+                BusesRoute = busesRoute,
+                PlanesRoute = emptyPlane
             };
 
 
@@ -277,6 +281,7 @@ namespace GatewayAPI.Controllers
             {
                 var entity = plane;
                 var newEntity = await planesHttpClient.PostAsync(entity);
+                plane = newEntity;
                 result = CreatedAtAction(nameof(Post), newEntity);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("LoggerInfo:");
@@ -302,6 +307,7 @@ namespace GatewayAPI.Controllers
 
 
             Favorites favorites = new Favorites();
+            var emptyBus= new List<Route>();
 
             List<Plane> planes = new List<Plane> { plane };
             IEnumerable<Route> planesRoute = mapper.Map<IEnumerable<Route>>(planes);
@@ -311,7 +317,8 @@ namespace GatewayAPI.Controllers
                 OutCity = plane.OutCity,
                 InCountry = plane.InCountry,
                 OutCountry = plane.OutCountry,
-                PlanesRoute = planesRoute
+                PlanesRoute = planesRoute, 
+                BusesRoute = emptyBus
             };
 
 

@@ -9,6 +9,8 @@ using System.Net.Http;
 using BusAPI.Model;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using GatewayAPI.FavoritesClient;
+using FavoritesAPI.Model;
 
 namespace GatewayAPI.Controllers
 {
@@ -17,10 +19,13 @@ namespace GatewayAPI.Controllers
     public class BusesGatewayController : ControllerBase
     {
         private readonly IBusesHttpClient busesHttpClient;
+        private readonly IFavoritesHttpClient favoritesHttpClient;
 
 
-        public BusesGatewayController(IBusesHttpClient busesHttpClient)
+
+        public BusesGatewayController(IBusesHttpClient busesHttpClient, IFavoritesHttpClient favoritesHttpClient)
         {
+            this.favoritesHttpClient = favoritesHttpClient;
             this.busesHttpClient = busesHttpClient;
 
         }
@@ -29,6 +34,8 @@ namespace GatewayAPI.Controllers
         public async Task<IActionResult> Get()
         {
             IActionResult result;
+
+            
             try
             {
                 result = Ok(await busesHttpClient.GetAsync());
@@ -268,6 +275,8 @@ namespace GatewayAPI.Controllers
                 return BadRequest(ModelState);
             }
 
+            
+
             IActionResult result;
             try
             {
@@ -277,6 +286,18 @@ namespace GatewayAPI.Controllers
                 Console.WriteLine("LoggerInfo:");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("Delete method activated");
+
+                var checkFavorites = await favoritesHttpClient.GetAllAsync();
+                var checking = checkFavorites.Where(x => x.BusesRoute.All(y => y.Id == id)).ToList();
+
+                foreach (Favorites item in checking)
+                {
+                    var newBusesRoute = item.BusesRoute.Where(route => route.Id != id).ToList();
+                    item.BusesRoute = newBusesRoute;
+                    await favoritesHttpClient.PutAsync(item.Id, item);
+                }
+
+
             }
             catch (DbUpdateException dbEx)
             {

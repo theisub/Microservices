@@ -7,6 +7,8 @@ namespace FavoritesAPI.Model
 {
     public class Route
     {
+        public long Id { get; set; }
+
         public string CompanyName { get; set; }
         public long Price { get; set; }
         public int travelTime { get; set; }

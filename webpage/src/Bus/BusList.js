@@ -13,7 +13,9 @@ export default class BusList extends Component {
       this.state = {business: [], current:1, dataCount:1,pageSize:5};  
     }  
     componentDidMount(){  
-      axios.get('https://localhost:44331/api/buses/companies/FrenchTour?pageSize='+this.state.pageSize+'&pageNum='+this.state.current)  
+      //axios.get('https://localhost:44375/api/busesgateway/companies/FrenchTour?pageSize='+this.state.pageSize+'&pageNum='+this.state.current)  
+
+      axios.get('https://localhost:44375/api/busesgateway/')  
         .then(response => {  
           this.setState({ business: response.data, dataCount: response.data.length});  
           //debugger;  
@@ -28,7 +30,7 @@ export default class BusList extends Component {
       console.log(page);
       this.state.current = page;
       debugger;
-      await axios.get('https://localhost:44331/api/buses/companies/FrenchTour?pageSize='+this.state.pageSize+'&pageNum='+this.state.current)  
+      await axios.get('https://localhost:44375/api/busesgateway/companies/FrenchTour?pageSize='+this.state.pageSize+'&pageNum='+this.state.current)  
         .then(response => {  
           this.setState({ business: response.data, dataCount: response.data.length});  
           //debugger;  
