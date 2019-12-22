@@ -11,6 +11,8 @@ class Edit extends React.Component {
     this.onChangeOutCountry = this.onChangeOutCountry.bind(this);  
     this.onChangeInCity = this.onChangeInCity.bind(this);  
     this.onChangeOutCity = this.onChangeOutCity.bind(this);
+    this.onChangePrice= this.onChangePrice.bind(this);
+    this.onChangetravelTime = this.onChangetravelTime.bind(this);
 
     this.onSubmit = this.onSubmit.bind(this);  
   
@@ -76,13 +78,13 @@ class Edit extends React.Component {
   }
   onChangePrice(e) {  
     this.setState({  
-        Price: e.target.value  
+        Price: Number(e.target.value)
     });  
   }
 
   onChangetravelTime(e) {  
     this.setState({  
-        travelTime: e.target.value  
+        travelTime: Number(e.target.value)
     });  
   }
 
@@ -92,7 +94,7 @@ class Edit extends React.Component {
     });  
   }              
   
-  onSubmit(e) {  
+  async onSubmit(e) {  
     debugger;  
     e.preventDefault();  
     const bus = {  
@@ -105,12 +107,20 @@ class Edit extends React.Component {
       travelTime :this.state.travelTime ,
       Transit: this.state.Transit
   
-    };  
-    axios.put('https://localhost:44331/api/buses/'+this.props.match.params.id, bus)  
+    };
+     
+    await axios.put('https://localhost:44331/api/buses/'+this.props.match.params.id, bus)  
         .then(res => console.log(res.data));  
         debugger;  
         this.props.history.push('/Buslist')  
-  }  
+  }
+  
+  
+  onCancel(e)
+  {
+      window.history.go(-1);
+
+  }
     render() {  
         return (  
             <Container className="App">  
@@ -152,13 +162,13 @@ class Edit extends React.Component {
                         <FormGroup row>  
                             <Label for="text" sm={2}>Price</Label>  
                             <Col sm={10}>  
-                                <Input type="text" name="Price"value={this.state.Price} onChange={this.onChangePrice} placeholder="Enter price" />  
+                                <Input type="number" name="Price"value={this.state.Price} onChange={this.onChangePrice} placeholder="Enter price" />  
                             </Col>  
                         </FormGroup>
                         <FormGroup row>  
                             <Label for="text" sm={2}>travelTime</Label>  
                             <Col sm={10}>  
-                                <Input type="text" name="travelTime"value={this.state.travelTime} onChange={this.onChangetravelTime} placeholder="Enter travelTime" />  
+                                <Input type="number" name="travelTime"value={this.state.travelTime} onChange={this.onChangetravelTime} placeholder="Enter travelTime" />  
                             </Col>  
                         </FormGroup>
                         <FormGroup row>  
@@ -176,7 +186,7 @@ class Edit extends React.Component {
                           <Button type="submit" color="success">Submit</Button>{' '}  
                             </Col>  
                             <Col sm={1}>  
-                                <Button type="cancel" color="danger">Cancel</Button>{' '}  
+                                <Button type="button" color="danger" onClick={this.onCancel}>Cancel</Button>{' '}  
                             </Col>  
                             <Col sm={5}>  
                             </Col>  

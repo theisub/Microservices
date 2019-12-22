@@ -7,13 +7,13 @@ class Table extends Component {
     }  
       
     
-    DeleteBus= () =>{
+     DeleteBus= async () =>{
     debugger;  
-     axios.delete('https://localhost:44331/api/buses/'+this.props.obj.id)  
+     await axios.delete('https://localhost:44331/api/buses/'+this.props.obj.id)  
     .then(resp => {  
     if(resp.status===200){  
     alert('Record deleted successfully!!');
-      
+      window.location.reload()
     }  
     })  
     }  
