@@ -75,7 +75,7 @@ namespace BusAPI.Controllers
         }
 
         [HttpGet("companies/{company}", Name = "GetBusesByCompany")]
-        public async Task<IActionResult> GetBusesByCompany(string company, int pageNum = 1, int pageSize = 10)
+        public async Task<IActionResult> GetBusesByCompany(string company, int pageNum = 1, int pageSize = 100)
         {
             var buses = await busActions.GetAllBusesByCompany(company,pageNum,pageSize);
 
@@ -96,7 +96,7 @@ namespace BusAPI.Controllers
         }
 
         [HttpGet("routes", Name = "GetBusesByRoute")]
-        public async Task<IActionResult> GetBusesByRoute(string inCity, string outCity, int pageNum = 1, int pageSize = 10)
+        public async Task<IActionResult> GetBusesByRoute(string inCity, string outCity, int pageNum = 1, int pageSize = 100)
         {
             var buses = await busActions.GetAllBusesByRoute(inCity,outCity,pageNum,pageSize);
 

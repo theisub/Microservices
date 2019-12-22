@@ -28,6 +28,10 @@ namespace BusAPI
             services.AddDbContextPool<BusDbContext>(options => options.UseSqlServer("Data Source=BASEM-ой\\SQLEXPRESS;Initial Catalog=BusesDB;Integrated Security=True;Pooling=False"));
             services.AddTransient<IBusActions, BusActions>();
             services.AddControllers();
+            services.AddCors();
+           
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +45,10 @@ namespace BusAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(
+                options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+            );
 
             app.UseAuthorization();
 
