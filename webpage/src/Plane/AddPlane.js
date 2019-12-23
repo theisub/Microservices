@@ -1,12 +1,12 @@
 import React from 'react';  
 import axios from 'axios';  
-import '../Bus/AddBus.css'  
+import './AddPlane.css'  
 import { Container, Col, Form, Row, FormGroup, Label, Input, Button } from 'reactstrap';  
-class AddBus extends React.Component{  
+class AddPlane extends React.Component{  
 constructor(props){  
 super(props)  
 this.state = {  
-  busCompany:'',  
+  planeCompany:'',  
   inCountry:'',
   outCountry:'',    
   inCity:'',  
@@ -16,21 +16,21 @@ this.state = {
   Transit:false,
   }  
 }   
-AddBus=()=>{
+AddPlane=()=>{
   debugger;  
-  axios.post('https://localhost:44375/api/favoritesgateway/AddBusAndFavorite/', 
-  {busCompany:this.state.busCompany,inCountry:this.state.inCountry,outCountry:this.state.outCountry,   
+  axios.post('https://localhost:44331/api/Planes', 
+  {planeCompany:this.state.planeCompany,inCountry:this.state.inCountry,outCountry:this.state.outCountry,   
     inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit})  
 .then(json => {  
 if(json.data.Status==='Success'){  
   console.log(json.data.Status);  
   alert("Data Save Successfully");  
-this.props.history.push('/Buslist')  
+this.props.history.push('/Planeslist')  
 }  
 else{  
 alert('Data not Saved');  
 debugger;  
-this.props.history.push('/Buslist')  
+this.props.history.push('/Planeslist')  
 }  
 })  
 }  
@@ -53,13 +53,13 @@ handleBoolChange= (e)=> {
 render() {  
 return (  
    <Container className="App">  
-    <h4 className="PageHeading">Enter Bus Informations</h4>  
+    <h4 className="PageHeading">Enter plane Informations</h4>  
     <Form className="form">  
       <Col>  
         <FormGroup row>  
-          <Label for="name" sm={2}>busCompany</Label>  
+          <Label for="name" sm={2}>planeCompany</Label>  
           <Col sm={10}>  
-            <Input type="text" name="busCompany" onChange={this.handleChange} value={this.state.busCompany} placeholder="Enter busCompany" />  
+            <Input type="text" name="planeCompany" onChange={this.handleChange} value={this.state.planeCompany} placeholder="Enter planeCompany" />  
           </Col>  
         </FormGroup>  
         <FormGroup row>  
@@ -111,7 +111,7 @@ return (
           <Col sm={5}>  
           </Col>  
           <Col sm={1}>  
-          <button type="button" onClick={this.AddBus} className="btn btn-success">Submit</button>  
+          <button type="button" onClick={this.AddPlane} className="btn btn-success">Submit</button>  
           </Col>  
           <Col sm={1}>  
             <Button color="danger">Cancel</Button>{' '}  
@@ -127,4 +127,4 @@ return (
    
 }  
    
-export default AddBus;  
+export default AddPlane;  

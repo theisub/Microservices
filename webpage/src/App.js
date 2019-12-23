@@ -3,6 +3,8 @@ import AddBus from './Bus/AddBus';
 import BusList from './Bus/BusList';  
 import EditBus from './Bus/EditBus';
 import SearchPage from './Search/SearchPage';
+import PlanesList from './Plane/PlanesList';
+import EditPlane from './Plane/EditPlane';
   
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';  
 import './App.css';  
@@ -23,6 +25,9 @@ function App() {
                 <Link to={'/Buslist'} className="nav-link">Bus List</Link>  
               </li>
               <li className="nav-item">  
+                <Link to={'/Planeslist'} className="nav-link">Planes List</Link>  
+              </li>
+              <li className="nav-item">  
                 <Link to={'/search'} className="nav-link"> Search routes</Link>  
               </li>
               <li className="nav-item">  
@@ -34,10 +39,15 @@ function App() {
         <Switch>  
           <Route exact path='/Addbus' component={AddBus} />  
           <Route path='/Buslist' component={BusList} />
+          <Route path='/Planeslist' component={PlanesList} />
+
           <Route path='/search' component={SearchPage} />
           <Route path='/favorites' component={FavoritesPage} />
 
-          <Route path='/:id' component={EditBus} />    
+          <Route path='/editBus/:id' component={EditBus} />
+          <Route path='/editPlane/:id' component={EditPlane} />
+
+    
         </Switch>  
       </div>  
     </Router>  

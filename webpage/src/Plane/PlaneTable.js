@@ -1,15 +1,15 @@
 import React, { Component } from 'react';  
 import axios from 'axios';  
 import { Link } from 'react-router-dom';  
-class Table extends Component {  
+class PlaneTable extends Component {  
   constructor(props) {  
     super(props);  
     }  
       
     
-     DeleteBus= async () =>{
+     DeletePlane= async () =>{
     debugger;  
-     await axios.delete('https://localhost:44375/api/busesGateway/'+this.props.obj.id)  
+     await axios.delete('https://localhost:44375/api/planesgateway/'+this.props.obj.id)  
     .then(resp => {  
     if(resp.status===200){  
     alert('Record deleted successfully!!');
@@ -21,7 +21,7 @@ class Table extends Component {
     return (  
         <tr>  
           <td>  
-            {this.props.obj.busCompany}  
+            {this.props.obj.planeCompany}  
           </td>  
           <td>  
             {this.props.obj.inCountry}  
@@ -45,14 +45,14 @@ class Table extends Component {
             {Number(this.props.obj.transit)}  
           </td>    
           <td>  
-          <Link to={"/editBus/"+this.props.obj.id} className="btn btn-success">Edit</Link>  
+          <Link to={"/editPlane/"+this.props.obj.id} className="btn btn-success">Edit</Link>  
           </td>  
           <td>  
-            <button type="button" onClick={this.DeleteBus} className="btn btn-danger">Delete</button>  
+            <button type="button" onClick={this.DeletePlane} className="btn btn-danger">Delete</button>  
           </td>  
         </tr>  
     );  
   }  
 }  
   
-export default Table;  
+export default PlaneTable;  

@@ -1,8 +1,8 @@
 import React from 'react';   
 import { Container, Col, Form, Row, FormGroup, Label, Input, Button } from 'reactstrap';  
 import axios from 'axios'  
-import '../Bus/AddBus.css'  
-class EditBus extends React.Component {  
+import './AddPlane.css'  
+class EditPlane extends React.Component {  
     constructor(props) {  
         super(props)  
      
@@ -14,6 +14,7 @@ class EditBus extends React.Component {
     this.onChangePrice= this.onChangePrice.bind(this);
     this.onChangetravelTime = this.onChangetravelTime.bind(this);
     this.onChangeTransit = this.onChangeTransit.bind(this);
+
     this.onSubmit = this.onSubmit.bind(this);  
   
          this.state = {  
@@ -31,11 +32,10 @@ class EditBus extends React.Component {
   
   componentDidMount() { 
       console.log("et propsi",this.props) 
-      debugger;
-      axios.get('https://localhost:44375/api/busesGateway/'+this.props.match.params.id)  
+      axios.get('https://localhost:44361/api/planes/'+this.props.match.params.id)  
           .then(response => { 
               this.setState({   
-                Name: response.data.busCompany,   
+                Name: response.data.planeCompany,   
                 InCountry: response.data.inCountry,  
                 OutCountry: response.data.outCountry,  
                 inCity: response.data.inCity,
@@ -48,7 +48,9 @@ class EditBus extends React.Component {
           })  
           .catch(function (error) {  
               console.log(error);  
-          })  
+          })
+          
+          debugger;
     }  
   
   onChangeName(e) {  
@@ -92,13 +94,13 @@ class EditBus extends React.Component {
     this.setState({  
         transit: Boolean(e.target.value)
     });  
-  }             
+  }              
   
   async onSubmit(e) {  
     debugger;  
     e.preventDefault();  
-    const bus = {  
-      BusCompany: this.state.Name,  
+    const plane = {  
+      planeCompany: this.state.Name,  
       InCountry: this.state.InCountry,  
       OutCountry: this.state.OutCountry,  
       inCity: this.state.inCity,
@@ -109,10 +111,10 @@ class EditBus extends React.Component {
   
     };
      
-    await axios.put('https://localhost:44331/api/buses/'+this.props.match.params.id, bus)  
+    await axios.put('https://localhost:44361/api/planes/'+this.props.match.params.id, plane)  
         .then(res => console.log(res.data));  
         debugger;  
-        this.props.history.push('/Buslist')  
+        this.props.history.push('/Planeslist')  
   }
   
   
@@ -125,7 +127,7 @@ class EditBus extends React.Component {
         return (  
             <Container className="App">  
   
-             <h4 className="PageHeading">Update bus Informations</h4>  
+             <h4 className="PageHeading">Update plane Informations</h4>  
                 <Form className="form" onSubmit={this.onSubmit}>  
                     <Col>  
                         <FormGroup row>  
@@ -174,7 +176,7 @@ class EditBus extends React.Component {
                         <FormGroup row>  
                             <Label for="text" sm={2}>Transit</Label>  
                             <Col sm={10}>  
-                                <Input type="number" name="Transit"value={Number(this.state.transit)} onChange={this.onChangeTransit} placeholder="Enter Transit" />  
+                                <Input type="number" min={0} max={1} name="Transit"value={Number(this.state.transit)} onChange={this.onChangeTransit} placeholder="Enter Transit" />  
                             </Col>  
                         </FormGroup>              
                     </Col>  
@@ -199,4 +201,4 @@ class EditBus extends React.Component {
   
 }  
   
-export default EditBus;  
+export default EditPlane;  

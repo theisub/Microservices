@@ -31,6 +31,7 @@ namespace PlaneAPI
             services.AddDbContextPool<PlaneDbContext>(options => options.UseSqlServer("Data Source=BASEM-ой\\SQLEXPRESS;Initial Catalog=PlanesDB;Integrated Security=True;Pooling=False"));
             services.AddScoped<IPlaneActions, PlaneActions>();
             services.AddControllers();
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +47,9 @@ namespace PlaneAPI
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseCors(
+                options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+            );
 
             app.UseEndpoints(endpoints =>
             {
