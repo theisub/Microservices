@@ -8,14 +8,16 @@ class Table extends Component {
       
     
      DeleteBus= async () =>{
-    debugger;  
+    debugger;
+    alert('Record deleted successfully!!');  
      await axios.delete('https://localhost:44375/api/busesGateway/'+this.props.obj.id)  
     .then(resp => {  
     if(resp.status===200){  
     alert('Record deleted successfully!!');
       window.location.reload()
     }  
-    })  
+    })
+    window.location.reload()  
     }  
   render() {  
     return (  

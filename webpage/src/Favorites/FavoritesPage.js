@@ -30,7 +30,7 @@ export default class FavoritesPage extends Component{
       render() {  
         return (  
           <div>  
-            <h4 align="center">Bus List</h4>  
+            <h4 align="center">Favorites List</h4>  
             <table className="table table-striped" style={{ marginTop: 10 }}>  
               <thead className="thead-dark">  
                 <tr>              
@@ -38,8 +38,7 @@ export default class FavoritesPage extends Component{
                   <th>outCountry</th>  
                   <th>inCity</th>  
                   <th>outCity</th>
-                  <th width="10%">BusesRoutes</th>
-                  <th>PlanesRoutes</th>
+                  <th width="10%">Routes</th>
                   <th colSpan="5">Action</th>  
                 </tr>  
               </thead>  

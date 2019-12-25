@@ -9,6 +9,7 @@ import EditPlane from './Plane/EditPlane';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';  
 import './App.css';  
 import FavoritesPage from './Favorites/FavoritesPage';
+import AddPlane from './Plane/AddPlane';
 
 
 function App() {  
@@ -20,15 +21,15 @@ function App() {
             <ul className="navbar-nav mr-auto">  
               <li className="nav-item">  
                 <Link to={'/AddBus'} className="nav-link">AddBus</Link>  
-              </li>  
+              </li> 
+              <li className="nav-item">  
+                <Link to={'/AddPlane'} className="nav-link">AddPlane</Link>  
+              </li>   
               <li className="nav-item">  
                 <Link to={'/Buslist'} className="nav-link">Bus List</Link>  
               </li>
               <li className="nav-item">  
                 <Link to={'/Planeslist'} className="nav-link">Planes List</Link>  
-              </li>
-              <li className="nav-item">  
-                <Link to={'/search'} className="nav-link"> Search routes</Link>  
               </li>
               <li className="nav-item">  
                 <Link to={'/favorites'} className="nav-link"> Favorites</Link>  
@@ -38,6 +39,7 @@ function App() {
         </nav> <br />  
         <Switch>  
           <Route exact path='/Addbus' component={AddBus} />  
+          <Route exact path='/AddPlane' component={AddPlane}/>
           <Route path='/Buslist' component={BusList} />
           <Route path='/Planeslist' component={PlanesList} />
 

@@ -183,7 +183,6 @@ namespace GatewayAPI.Controllers
         [HttpPost("AddBusAndFavorite", Name = "PostBusesFavoriteGatewayAll")]
         public async Task<IActionResult> PostBusesFavorite([FromBody] Bus bus)
         {
-            //https://localhost:44375/api/favoritesgateway/addfavorite?incity=Moscow&outcity=Berlin
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -221,7 +220,7 @@ namespace GatewayAPI.Controllers
 
 
             Favorites favorites = new Favorites();
-            var emptyPlane = new List<Route>();
+            List<Route> emptyPlane = new List<Route>();
             List<Bus> buses = new List<Bus> { bus };
             IEnumerable<Route> busesRoute = mapper.Map<IEnumerable<Route>>(buses);
             Favorites newFavorite = new Favorites
@@ -307,7 +306,7 @@ namespace GatewayAPI.Controllers
 
 
             Favorites favorites = new Favorites();
-            var emptyBus= new List<Route>();
+            List<Route> emptyBus= new List<Route>();
 
             List<Plane> planes = new List<Plane> { plane };
             IEnumerable<Route> planesRoute = mapper.Map<IEnumerable<Route>>(planes);

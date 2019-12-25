@@ -44,7 +44,7 @@ export default class RoutesPage extends Component{
               </tbody>  
             </table>
             
-            <h4 align="center">Bus List</h4>  
+            <h4 align="center">Plane List</h4>  
             <table className="table table-striped" style={{ marginTop: 10 }}>  
               <thead className="thead-dark">  
                 <tr>              

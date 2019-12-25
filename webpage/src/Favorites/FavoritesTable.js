@@ -40,11 +40,6 @@ class FavoritesTable extends Component {
 
           <RoutesPage props={this.props}/>
 
-
-        
-          <td>  
-          <Link to={""+this.props.obj.id} className="btn btn-success">Edit</Link>  
-          </td>  
           <td>  
             <button type="button" onClick={this.DeleteFavorite} className="btn btn-danger">Delete</button>  
           </td>  

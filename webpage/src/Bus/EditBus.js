@@ -32,7 +32,7 @@ class EditBus extends React.Component {
   componentDidMount() { 
       console.log("et propsi",this.props) 
       debugger;
-      axios.get('https://localhost:44375/api/busesGateway/'+this.props.match.params.id)  
+      axios.get('https://localhost:44331/api/buses/'+this.props.match.params.id)  
           .then(response => { 
               this.setState({   
                 Name: response.data.busCompany,   
@@ -109,7 +109,7 @@ class EditBus extends React.Component {
   
     };
      
-    await axios.put('https://localhost:44331/api/buses/'+this.props.match.params.id, bus)  
+    await axios.put('https://localhost:44375/api/busesgateway/'+this.props.match.params.id, bus)  
         .then(res => console.log(res.data));  
         debugger;  
         this.props.history.push('/Buslist')  

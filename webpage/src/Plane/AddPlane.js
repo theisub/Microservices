@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';  
 import './AddPlane.css'  
 import { Container, Col, Form, Row, FormGroup, Label, Input, Button } from 'reactstrap';  
+import FormErrors from '../FormErrors';
 class AddPlane extends React.Component{  
 constructor(props){  
 super(props)  
@@ -14,27 +15,112 @@ this.state = {
   Price: 0,
   travelTime: 0,
   Transit:false,
+
+
+
+
+  formErrors: 
+  {planeCompany: '', inCountry: '',outCountry:'',inCity:'',outCity:''},
+    planeCompanyValid: false,
+    inCountryValid: false,
+    outCountryValid: false,
+    inCityValid:false,
+    outCityValid:false
   }  
 }   
 AddPlane=()=>{
   debugger;  
-  axios.post('https://localhost:44331/api/Planes', 
+  axios.post('https://localhost:44375/api/planesgateway', 
   {planeCompany:this.state.planeCompany,inCountry:this.state.inCountry,outCountry:this.state.outCountry,   
     inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit})  
 .then(json => {  
-if(json.data.Status==='Success'){  
+if(json.status===200){  
+  console.log(json.data.Status);  
+  alert("Data saved");  
+this.props.history.push('/Planeslist')  
+}  
+else{  
+alert('Data  saved!');  
+debugger;  
+this.props.history.push('/Planeslist')  
+}  
+})  
+}
+
+AddPlaneAndFavorite=()=>{
+  debugger;  
+  axios.post('https://localhost:44375/api/favoritesgateway/AddPlaneAndFavorite/', 
+  {planeCompany:this.state.planeCompany,inCountry:this.state.inCountry,outCountry:this.state.outCountry,   
+    inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit})  
+.then(json => {  
+if(json.status===200){  
   console.log(json.data.Status);  
   alert("Data Save Successfully");  
 this.props.history.push('/Planeslist')  
 }  
 else{  
-alert('Data not Saved');  
+alert('Data saved!');  
 debugger;  
-this.props.history.push('/Planeslist')  
+this.props.history.push('/Planelist')  
 }  
 })  
 }  
-   
+
+handleUserInput= (e)=> {
+  const name = e.target.name;
+  const value = e.target.value;
+  this.setState({[name]: value}, 
+    () => { this.validateField(name, value); });
+}
+
+validateField=(fieldName, value)=> {
+  let fieldValidationErrors = this.state.formErrors;
+  let planeCompanyValid = this.state.planeCompanyValid;
+  let inCountryValid = this.state.inCountryValid;
+  let outCountryValid = this.state.outCountryValid;
+  let inCityValid = this.state.inCityValid;
+  let outCityValid = this.state.outCityValid;
+  debugger;
+  switch(fieldName) {
+    case 'planeCompany':
+      planeCompanyValid = value.length >= 2;
+      fieldValidationErrors.planeCompany = planeCompanyValid ? '': ' слишком короткое название, должно быть больше 2';
+      break;
+    case 'inCountry':
+        inCountryValid = value.length >= 2;
+        fieldValidationErrors.inCountryValid = inCountryValid ? '': ' слишком короткое название, должно быть больше 2';
+        break;
+    case 'outCountry':
+        outCountryValid = value.length >= 2;
+        fieldValidationErrors.outCountryValid = outCountryValid ? '': ' слишком короткое название, должно быть больше 2';
+        break;
+    case 'inCity':
+          inCityValid = value.length >= 2;
+          fieldValidationErrors.inCityValid = inCityValid ? '': ' слишком короткое название, должно быть больше 2';
+          break;
+    case 'outCity':
+          outCityValid = value.length >= 2;
+          fieldValidationErrors.outCityValid = outCityValid ? '': ' слишком короткое название, должно быть больше 2';
+          break;
+
+
+    default:
+      break;
+  }
+  this.setState({formErrors: fieldValidationErrors,
+                  planeCompanyValid: planeCompanyValid,
+                  inCountryValid: inCountryValid,
+                  outCountryValid: outCountryValid,
+                  inCityValid: inCityValid,
+                  outCityValid: outCityValid
+
+                }, this.validateForm);
+}
+
+validateForm=()=> {
+  this.setState({formValid: this.state.planeCompanyValid && this.state.inCountryValid && this.state.outCountryValid && this.state.inCityValid  && this.state.outCityValid });
+}
+
 handleChange= (e)=> {  
 this.setState({[e.target.name]:e.target.value});  
 }
@@ -54,36 +140,38 @@ render() {
 return (  
    <Container className="App">  
     <h4 className="PageHeading">Enter plane Informations</h4>  
-    <Form className="form">  
+    <Form className="form">
+    <FormErrors formErrors={this.state.formErrors} />
+  
       <Col>  
         <FormGroup row>  
           <Label for="name" sm={2}>planeCompany</Label>  
           <Col sm={10}>  
-            <Input type="text" name="planeCompany" onChange={this.handleChange} value={this.state.planeCompany} placeholder="Enter planeCompany" />  
+            <Input type="text" name="planeCompany" onChange={(event) => this.handleUserInput(event)} value={this.state.planeCompany} placeholder="Enter planeCompany" />  
           </Col>  
         </FormGroup>  
         <FormGroup row>  
           <Label for="address" sm={2}>inCountry</Label>  
           <Col sm={10}>  
-            <Input type="text" name="inCountry" onChange={this.handleChange} value={this.state.inCountry} placeholder="Enter inCountry" />  
+            <Input type="text" name="inCountry" onChange={(event) => this.handleUserInput(event)} value={this.state.inCountry} placeholder="Enter inCountry" />  
           </Col>  
         </FormGroup>  
         <FormGroup row>  
           <Label for="Password" sm={2}>outCountry</Label>  
           <Col sm={10}>  
-            <Input type="text" name="outCountry" onChange={this.handleChange} value={this.state.outCountry} placeholder="Enter outCountry" />  
+            <Input type="text" name="outCountry" onChange={(event) => this.handleUserInput(event)} value={this.state.outCountry} placeholder="Enter outCountry" />  
           </Col>  
         </FormGroup>  
         <FormGroup row>  
           <Label for="Password" sm={2}>inCity</Label>  
           <Col sm={10}>  
-            <Input type="text" name="inCity" onChange={this.handleChange} value={this.state.inCity} placeholder="Enter inCity" />  
+            <Input type="text" name="inCity" onChange={(event) => this.handleUserInput(event)} value={this.state.inCity} placeholder="Enter inCity" />  
           </Col>  
         </FormGroup>  
         <FormGroup row>  
           <Label for="Password" sm={2}>outCity</Label>  
           <Col sm={10}>  
-            <Input type="text" name="outCity" onChange={this.handleChange} value={this.state.outCity} placeholder="Enter outCity" />  
+            <Input type="text" name="outCity" onChange={(event) => this.handleUserInput(event)} value={this.state.outCity} placeholder="Enter outCity" />  
           </Col>  
         </FormGroup>
         <FormGroup row>  
@@ -111,11 +199,13 @@ return (
           <Col sm={5}>  
           </Col>  
           <Col sm={1}>  
-          <button type="button" onClick={this.AddPlane} className="btn btn-success">Submit</button>  
-          </Col>  
+          <button type="button" onClick={this.AddPlane} className="btn btn-success" disabled={!this.state.formValid}> Submit</button>  
+          </Col>
+          
+        
           <Col sm={1}>  
-            <Button color="danger">Cancel</Button>{' '}  
-          </Col>  
+          <button type="button" onClick={this.AddPlaneAndFavorite} className="btn btn-success" disabled={!this.state.formValid}> Submit + Favorite</button>  
+          </Col>       
           <Col sm={5}>  
           </Col>  
         </FormGroup>  

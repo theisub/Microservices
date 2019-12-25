@@ -68,7 +68,7 @@ export default class BusList extends Component {
              { this.tabRow() }   
             </tbody>  
           </table>
-          <Pagination onChange={this.onChange} current={this.state.current} total={50} />;
+          <Pagination onChange={this.onChange} current={this.state.current} total={20} />;
         </div>
        
           
