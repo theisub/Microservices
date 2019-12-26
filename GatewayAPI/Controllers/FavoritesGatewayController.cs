@@ -122,9 +122,46 @@ namespace GatewayAPI.Controllers
         public async Task<IActionResult> PostFavorite(string inCity = null, string outCity = null, string inCountry = null, string outCountry = null)
         {
             //https://localhost:44375/api/favoritesgateway/addfavorite?incity=Moscow&outcity=Paris
-            var planesData = await planesHttpClient.GetCheapestPlanes(inCity, outCity);
-            var busesData = await busesHttpClient.GetCheapestBuses(inCity, outCity);
 
+            IActionResult result;
+
+
+            bool isPlaneActive = false;
+            bool isBusActive = false;
+
+            List<Plane> planesData = new List<Plane>();
+            List<Bus> busesData = new List<Bus>();
+            try
+            {
+                 planesData = await planesHttpClient.GetCheapestPlanes(inCity, outCity);
+                 isPlaneActive = true;
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "GetCheapestPlanes failed to get")
+                    planesData = new List<Plane>();
+            }
+
+            try
+            {
+                busesData = await busesHttpClient.GetCheapestBuses(inCity, outCity);
+                isBusActive = true;
+            }
+            catch (Exception ex)
+            {
+               if (ex.Message == "GetCheapestBuses failed to get")
+                    busesData = new List<Bus>();
+            }
+
+            if (isPlaneActive && isBusActive)
+            {
+                result = StatusCode(StatusCodes.Status500InternalServerError);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("LoggerInfo:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"Both GET methods failed");
+                return result;
+            }
 
 
             Favorites favorites = new Favorites();
@@ -149,7 +186,6 @@ namespace GatewayAPI.Controllers
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("Very important info");
 
-            IActionResult result;
             try
             {
                 var entity = newFavorite;
@@ -320,12 +356,6 @@ namespace GatewayAPI.Controllers
                 BusesRoute = emptyBus
             };
 
-
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("LoggerInfo:");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("Very important info");
 
             try
             {

@@ -168,22 +168,41 @@ namespace GatewayAPI.PlanesClient
             HttpResponseMessage response;
             string url = $"/api/planes/cheapestRoute?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await client.SendAsync(request);
-
-            List<Plane> result;
-
-            var resultContent = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode)
             {
-                result = JsonConvert.DeserializeObject<List<Plane>>(resultContent);
-            }
-            else
-            {
-                throw new Exception("GetCheapestPlanes failed to get");
-            }
+                try
+                {
+                    response = await client.SendAsync(request);
+                    List<Plane> result;
 
-            return result;
+                    var resultContent = await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        result = JsonConvert.DeserializeObject<List<Plane>>(resultContent);
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                    {
+
+                        return null;
+                    }
+                    else
+                    {
+                        throw new Exception("GetCheapestPlanes failed to get");
+                    }
+
+                    return result;
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    throw new Exception("GetCheapestPlanes failed to get");
+
+
+                };
+                
+
+
+            }   
         }
 
 

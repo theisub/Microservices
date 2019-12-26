@@ -28,7 +28,8 @@ namespace PlaneAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<PlaneDbContext>(options => options.UseSqlServer("Server=localhost;Database=PlanesDB;User Id=sa;Password=Mypassword123;"));
+			services.AddDbContextPool<PlaneDbContext>(options => options.UseSqlServer("Data Source=BASEM-ПК\\SQLEXPRESS;Initial Catalog=PlanesDB;Integrated Security=True;Pooling=False"));
+            //services.AddDbContextPool<PlaneDbContext>(options => options.UseSqlServer("Server=localhost;Database=PlanesDB;User Id=sa;Password=Mypassword123;"));
             services.AddScoped<IPlaneActions, PlaneActions>();
             services.AddControllers();
             services.AddCors();

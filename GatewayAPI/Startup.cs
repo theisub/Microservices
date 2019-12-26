@@ -15,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using GatewayAPI.BusesClient;
 using GatewayAPI.PlanesClient;
 using GatewayAPI.FavoritesClient;
+using Polly;
+
 namespace GatewayAPI
 {
     public class Startup
@@ -34,17 +36,17 @@ namespace GatewayAPI
             services.AddHttpClient<IBusesHttpClient, BusesHttpClient>(client =>
            {
                client.BaseAddress = new Uri("https://localhost:44331/");
-           });
+           });//.AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15)));
 
             services.AddHttpClient<IPlanesHttpClient, PlanesHttpClient>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44361/");
-            });
+            });//.AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15)));
 
             services.AddHttpClient<IFavoritesHttpClient, FavoritesHttpClient>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44357/");
-            });
+            });//.AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15)));
             services.AddCors();
 
 

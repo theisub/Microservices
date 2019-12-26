@@ -173,22 +173,35 @@ namespace GatewayAPI.BusesClient
             HttpResponseMessage response;
             string url = $"/api/buses/cheapestRoute?inCity={inCity}&outCity={outCity}&pageNum={pageNum}&pageSize={pageSize}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await client.SendAsync(request);
-
-            List<Bus> result;
-
-            var resultContent = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode)
             {
-                result = JsonConvert.DeserializeObject<List<Bus>>(resultContent);
-            }
-            else
-            {
-                throw new Exception("GetCheapestBuses failed to get");
+                try
+                {
+                    response = await client.SendAsync(request);
+                    List<Bus> result;
+
+                    var resultContent = await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        result = JsonConvert.DeserializeObject<List<Bus>>(resultContent);
+                    }
+                    else
+                    {
+                        throw new Exception("GetCheapestBuses failed to get");
+                    }
+
+                    return result;
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    throw new Exception("GetCheapestBuses failed to get");
+
+                }
+
             }
 
-            return result;
+            
         }
 
 
