@@ -20,7 +20,8 @@ export default class BusList extends Component {
           this.setState({ business: response.data, dataCount: response.data.length});  
           //debugger;  
         })  
-        .catch(function (error) {  
+        .catch(function (error) { 
+          alert(error); 
           console.log(error);  
         })  
     }

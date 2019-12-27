@@ -9,12 +9,18 @@ class Table extends Component {
     
      DeleteBus= async () =>{
     debugger;
-    alert('Record deleted successfully!!');  
      await axios.delete('https://localhost:44375/api/busesGateway/'+this.props.obj.id)  
-    .then(resp => {  
-    if(resp.status===200){  
+    .then(resp => { 
+      debugger; 
+    if(resp.status===202){  
     alert('Record deleted successfully!!');
       window.location.reload()
+    }
+    else
+    {
+      console.log(resp.status);  
+      debugger;
+      alert("Record didn't delete." + resp.statusText + ". Status code: " + resp.status);  
     }  
     })
     window.location.reload()  

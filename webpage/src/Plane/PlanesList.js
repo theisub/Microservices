@@ -21,6 +21,7 @@ export default class PlanesList extends Component {
           //debugger;  
         })  
         .catch(function (error) {  
+          alert(error); 
           console.log(error);  
         })  
     }

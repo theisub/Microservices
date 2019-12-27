@@ -285,6 +285,7 @@ namespace GatewayAPI.Controllers
             catch (DbUpdateException)
             {
                 result = Conflict();
+                var newEntity = await busesHttpClient.DeleteAsync(bus.Id);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("LoggerInfo:");
                 Console.ForegroundColor = ConsoleColor.Gray;
@@ -293,8 +294,10 @@ namespace GatewayAPI.Controllers
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                var newEntity = await busesHttpClient.DeleteAsync(bus.Id);
+
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("LoggerInfo:");
+                Console.WriteLine("LoggerInfo: " + bus.Id);
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine($"Post method  of PostBusesFavoriteGatewayAll: internal exception");
             }

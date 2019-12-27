@@ -282,7 +282,7 @@ namespace GatewayAPI.Controllers
             {
 
                 var newEntity = await busesHttpClient.DeleteAsync(id);
-                result = CreatedAtAction(nameof(Put), newEntity);
+                result = AcceptedAtAction(nameof(Delete), newEntity);
                 Console.WriteLine("LoggerInfo:");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("Delete method activated");
