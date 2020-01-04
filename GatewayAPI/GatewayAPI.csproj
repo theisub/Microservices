@@ -28,4 +28,8 @@
   <ItemGroup>
     <Folder Include="PlanesClient\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Controllers\QueueManager.cs" />
+    <Compile Remove="Controllers\QueueClass.cs" />
+  </ItemGroup>
 </Project>

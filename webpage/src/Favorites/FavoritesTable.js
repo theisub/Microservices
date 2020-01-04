@@ -15,12 +15,22 @@ class FavoritesTable extends Component {
         debugger;  
          await axios.delete('https://localhost:44375/api/favoritesgateway/'+this.props.obj.id)  
         .then(resp => {  
-        if(resp.status===200){  
-        alert('Record deleted successfully!!');
-          window.location.reload()
-        }  
-        })  
-        }
+          if(resp.status==202){  
+            alert('Record deleted successfully!!');
+              window.location.reload()
+            }  
+            else
+            {
+              console.log(resp.status);  
+              debugger;
+              alert("Record didn't delete." + resp.statusText + ". Status code: " + resp.status);  
+            }  
+            }).catch(function (error) { 
+              alert(error + " Response code: " + error.response.status);
+              debugger;
+              console.log(error);  
+            })    
+            }
       
   render() {  
     return (  

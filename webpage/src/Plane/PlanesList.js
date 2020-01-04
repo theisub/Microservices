@@ -69,7 +69,6 @@ export default class PlanesList extends Component {
              { this.tabRow() }   
             </tbody>  
           </table>
-          <Pagination onChange={this.onChange} current={this.state.current} total={20} />;
         </div>
        
           

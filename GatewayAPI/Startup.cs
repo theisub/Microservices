@@ -32,21 +32,22 @@ namespace GatewayAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            
             services.AddAutoMapper(typeof(Mapping.MappingProfile));
             services.AddHttpClient<IBusesHttpClient, BusesHttpClient>(client =>
            {
                client.BaseAddress = new Uri("https://localhost:44331/");
-           });//.AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15)));
+           }).AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15)));
 
             services.AddHttpClient<IPlanesHttpClient, PlanesHttpClient>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44361/");
-            });//.AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15)));
+            }).AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15)));
 
             services.AddHttpClient<IFavoritesHttpClient, FavoritesHttpClient>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44357/");
-            });//.AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15)));
+            }).AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15)));
             services.AddCors();
 
 

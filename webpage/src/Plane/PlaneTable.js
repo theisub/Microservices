@@ -8,17 +8,26 @@ class PlaneTable extends Component {
       
     
      DeletePlane= async () =>{
-      alert('Record deleted successfully!!');
      await axios.delete('https://localhost:44375/api/planesgateway/'+this.props.obj.id)  
     .then(resp => { 
     console.log(resp.status); 
-    if(resp.status){  
+    if(resp.status==202){  
     alert('Record deleted successfully!!');
       window.location.reload()
     }  
-    })
-    window.location.reload()
+    else
+    {
+      console.log(resp.status);  
+      debugger;
+      alert("Record didn't delete." + resp.statusText + ". Status code: " + resp.status);  
     }  
+    }).catch(function (error) { 
+      alert(error + " Response code: " + error.response.status);
+      debugger;
+      console.log(error);  
+    })    
+    }
+    
   render() {  
     return (  
         <tr>  

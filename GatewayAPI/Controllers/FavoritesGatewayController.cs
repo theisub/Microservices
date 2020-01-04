@@ -31,6 +31,7 @@ namespace GatewayAPI.Controllers
             this.busesHttpClient = busesHttpClient;
             this.planesHttpClient = planesHttpClient;
             this.mapper = mapper;
+            //this.jobQueue = new QueueManager(favoritesHttpClient,planesHttpClient);
         }
 
         [HttpGet]
@@ -449,7 +450,7 @@ namespace GatewayAPI.Controllers
             {
 
                 var newEntity = await favoritesHttpClient.DeleteAsync(id);
-                result = CreatedAtAction(nameof(Delete), newEntity);
+                result = AcceptedAtAction(nameof(Delete), newEntity);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("LoggerInfo:");
                 Console.ForegroundColor = ConsoleColor.Gray;

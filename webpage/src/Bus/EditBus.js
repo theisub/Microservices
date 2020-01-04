@@ -110,7 +110,11 @@ class EditBus extends React.Component {
     };
      
     await axios.put('https://localhost:44375/api/busesgateway/'+this.props.match.params.id, bus)  
-        .then(res => console.log(res.data));  
+        .then(res => console.log(res.data)).catch(function (error) { 
+            alert(error + " Response code: " + error.response.status);
+            debugger;
+            console.log(error);  
+          });    
         debugger;  
         this.props.history.push('/Buslist')  
   }

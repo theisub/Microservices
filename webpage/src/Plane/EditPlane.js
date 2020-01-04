@@ -111,8 +111,12 @@ class EditPlane extends React.Component {
   
     };
      
-    await axios.put('https://localhost:44361/api/planes/'+this.props.match.params.id, plane)  
-        .then(res => console.log(res.data));  
+    await axios.put('https://localhost:44375/api/planesgateway/'+this.props.match.params.id, plane)  
+        .then(res => console.log(res.data)).catch(function (error) { 
+            alert(error + " Response code: " + error.response.status);
+            debugger;
+            console.log(error);  
+          });  
         debugger;  
         this.props.history.push('/Planeslist')  
   }

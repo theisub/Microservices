@@ -22,9 +22,13 @@ class Table extends Component {
       debugger;
       alert("Record didn't delete." + resp.statusText + ". Status code: " + resp.status);  
     }  
-    })
-    window.location.reload()  
-    }  
+    }).catch(function (error) { 
+      alert(error + " Response code: " + error.response.status);
+      debugger;
+      console.log(error);  
+    })    
+    }
+    
   render() {  
     return (  
         <tr>  

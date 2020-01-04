@@ -316,7 +316,7 @@ namespace GatewayAPI.Controllers
             {
                
                 var newEntity = await planesHttpClient.DeleteAsync(id);
-                result = CreatedAtAction(nameof(Put), newEntity);
+                result = AcceptedAtAction(nameof(Delete), newEntity);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("LoggerInfo:");
                 Console.ForegroundColor = ConsoleColor.Gray;
