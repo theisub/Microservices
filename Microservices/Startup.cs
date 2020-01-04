@@ -25,9 +25,9 @@ namespace BusAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-			//services.AddDbContextPool<BusDbContext>(options => options.UseSqlServer("Data Source=BASEM-ПК\\SQLEXPRESS;Initial Catalog=BusesDB;Integrated Security=True;Pooling=False"));
+            services.AddDbContextPool<BusDbContext>(options => options.UseSqlServer("Data Source=BASEM-ПК\\SQLEXPRESS;Initial Catalog=BusesDB;Integrated Security=True;Pooling=False"));
 
-            services.AddDbContextPool<BusDbContext>(options => options.UseSqlServer("Server=localhost;Database=BusesDB;User Id=sa;Password=Mypassword123;"));
+            //services.AddDbContextPool<BusDbContext>(options => options.UseSqlServer("Server=localhost;Database=BusesDB;User Id=sa;Password=Mypassword123;"));
             services.AddTransient<IBusActions, BusActions>();
             services.AddControllers();
             services.AddCors();

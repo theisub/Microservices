@@ -24,6 +24,7 @@ namespace GatewayAPI.Controllers
         private readonly IBusesHttpClient busesHttpClient;
         private readonly IPlanesHttpClient planesHttpClient;
         private readonly IMapper mapper;
+        private readonly QueueManager jobQueue;
 
         public FavoritesGatewayController(IFavoritesHttpClient favoritesHttpClient, IBusesHttpClient busesHttpClient, IPlanesHttpClient planesHttpClient, IMapper mapper) 
         {
@@ -31,7 +32,7 @@ namespace GatewayAPI.Controllers
             this.busesHttpClient = busesHttpClient;
             this.planesHttpClient = planesHttpClient;
             this.mapper = mapper;
-            //this.jobQueue = new QueueManager(favoritesHttpClient,planesHttpClient);
+            jobQueue = new QueueManager(favoritesHttpClient,planesHttpClient);
         }
 
         [HttpGet]
