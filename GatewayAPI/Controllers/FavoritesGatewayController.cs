@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using AutoMapper;
 using BusAPI.Model;
 using PlaneAPI.Model;
+using Hangfire;
 
 namespace GatewayAPI.Controllers
 {
@@ -24,7 +25,7 @@ namespace GatewayAPI.Controllers
         private readonly IBusesHttpClient busesHttpClient;
         private readonly IPlanesHttpClient planesHttpClient;
         private readonly IMapper mapper;
-        private readonly QueueManager jobQueue;
+        //private readonly QueueManager jobQueue;
 
         public FavoritesGatewayController(IFavoritesHttpClient favoritesHttpClient, IBusesHttpClient busesHttpClient, IPlanesHttpClient planesHttpClient, IMapper mapper) 
         {
@@ -32,12 +33,12 @@ namespace GatewayAPI.Controllers
             this.busesHttpClient = busesHttpClient;
             this.planesHttpClient = planesHttpClient;
             this.mapper = mapper;
-            jobQueue = new QueueManager(favoritesHttpClient,planesHttpClient);
+            //jobQueue = new QueueManager(favoritesHttpClient,planesHttpClient);
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
-        {
+        { 
             IActionResult result;
 
 
@@ -332,15 +333,24 @@ namespace GatewayAPI.Controllers
             {
                 result = Conflict();
                 Console.ForegroundColor = ConsoleColor.Green;
+
+
+                BackgroundJob.Enqueue<IPlanesHttpClient>(a => a.PostAsync(plane));
+                //jobQueue.AddPlaneRequest(plane);
                 Console.WriteLine("LoggerInfo:");
+                Console.WriteLine("ОШИБОЧКА В AddPlane:");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine($"Post method for Planes of PostPlanesFavoriteGatewayAll: DbUpdateException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                //jobQueue.AddPlaneRequest(plane);
+                BackgroundJob.Enqueue<IPlanesHttpClient>(a => a.PostAsync(plane));
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("LoggerInfo:");
+                Console.WriteLine("ОШИБОЧКА В AddPlane:");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine($"Post method for Planes of PostPlanesFavoriteGatewayAll: internal exception");
             }
@@ -375,16 +385,26 @@ namespace GatewayAPI.Controllers
             catch (DbUpdateException)
             {
                 result = Conflict();
+                //jobQueue.AddFavoriteRequest(newFavorite,plane);
+                //BackgroundJob.Enqueue(() => favoritesHttpClient.PostAsync(newFavorite));
+                BackgroundJob.Enqueue<IFavoritesActions>(a => a.Create(newFavorite));
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("LoggerInfo:");
+                Console.WriteLine("ОШИБОЧКА В AddFavorite:");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine($"Post method of PostPlanesFavoriteGatewayAll: DbUpdateException");
             }
             catch (Exception ex)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                //jobQueue.AddFavoriteRequest(newFavorite, plane);
+                //BackgroundJob.Enqueue(() => favoritesHttpClient.PostAsync(newFavorite));
+                BackgroundJob.Enqueue<IFavoritesActions>(a => a.Create(newFavorite));
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("LoggerInfo:");
+                Console.WriteLine("ОШИБОЧКА В AddFavorite:");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine($"Post method of PostPlanesFavoriteGatewayAll: internal exception");
             }

@@ -215,11 +215,19 @@ namespace GatewayAPI.PlanesClient
             HttpResponseMessage response;
             string url = $"/api/planes/";
             var body = JsonConvert.SerializeObject(plane);
-            using (var request = new HttpRequestMessage(HttpMethod.Post, url)
+
+            try
             {
-                Content = new StringContent(body, Encoding.UTF8, "application/json")
-            })
-                response = await client.SendAsync(request);
+                using (var request = new HttpRequestMessage(HttpMethod.Post, url)
+                {
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                })
+                    response = await client.SendAsync(request);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("plane failed to be posted");
+            }
 
             var resultContent = await response.Content.ReadAsStringAsync();
             Plane result;

@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="HangFire" Version="1.7.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -27,9 +28,5 @@
 
   <ItemGroup>
     <Folder Include="PlanesClient\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Controllers\QueueManager.cs" />
-    <Compile Remove="Controllers\QueueClass.cs" />
   </ItemGroup>
 </Project>
