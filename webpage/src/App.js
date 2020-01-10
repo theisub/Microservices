@@ -32,6 +32,9 @@ function App() {
                 <Link to={'/Planeslist'} className="nav-link">Planes List</Link>  
               </li>
               <li className="nav-item">  
+                <Link to={'/Searchpage'} className="nav-link">Search</Link>  
+              </li>
+              <li className="nav-item">  
                 <Link to={'/favorites'} className="nav-link"> Favorites</Link>  
               </li>      
             </ul>  
@@ -43,7 +46,7 @@ function App() {
           <Route path='/Buslist' component={BusList} />
           <Route path='/Planeslist' component={PlanesList} />
 
-          <Route path='/search' component={SearchPage} />
+          <Route path='/Searchpage' component={SearchPage} />
           <Route path='/favorites' component={FavoritesPage} />
 
           <Route path='/editBus/:id' component={EditBus} />

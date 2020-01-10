@@ -1,6 +1,7 @@
 import React, { Component,useState  } from 'react';  
 import {InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import { Button, ButtonGroup } from 'reactstrap';
+import axios from 'axios';  
 
  
 
@@ -12,12 +13,39 @@ export default class SearchPage extends Component {
       this.state = {
         business: [], 
         isBus:false, 
-        isPlane:false};
+        isPlane:false,
+        inCity:'',  
+        outCity:''
+        };
       
     }
 
-    
+    handleUserInput= (e)=> {
+      const name = e.target.name;
+      const value = e.target.value;
+      this.setState({[name]: value});
+    }
 
+    AddFavorite=()=>{
+      //debugger;  
+      axios.post('https://localhost:44375/api/favoritesgateway/addfavorite?incity='+this.state.inCity+'&outCity='+this.state.outCity)  
+    .then(json => {  
+    if(json.status===200){  
+      console.log(json.data.Status);  
+      alert("Data Save Successfully");  
+    this.props.history.push('/Buslist')  
+    }  
+    else{  
+    alert('Data saved!');  
+    //debugger;
+    console.log(json.data.Status);  
+      
+    this.props.history.push('/Buslist')  
+    }  
+    })  
+    }  
+    
+/*
     busHandleChange= (e)=> {  
       this.state.isBus = !this.state.isBus;
       //this.setState({[e.target.name]:!e.target.state });
@@ -41,7 +69,7 @@ export default class SearchPage extends Component {
     }
 
     
-    
+    */
       
   
     render() {  
@@ -51,30 +79,22 @@ export default class SearchPage extends Component {
           <InputGroupAddon addonType="prepend">
             <InputGroupText>Откуда</InputGroupText>
           </InputGroupAddon>
-          <Input placeholder="inCity" />
+          <Input type="text" name="inCity" onChange={(event) => this.handleUserInput(event)} value={this.state.inCity} placeholder="Enter inCity" />  
         </InputGroup>
         <br />
         <InputGroup>
           <InputGroupAddon addonType="prepend">
             <InputGroupText>Куда</InputGroupText>
           </InputGroupAddon>
-          <Input placeholder="outCity" />
+          <Input type="text" name="outCity" onChange={(event) => this.handleUserInput(event)} value={this.state.outCity} placeholder="Enter outCity" />  
         </InputGroup>
-        <br />
-        <InputGroup>
-          <InputGroupAddon addonType="prepend">$</InputGroupAddon>
-          <Input placeholder="Amount" min={0} max={100} type="number" step="1" />
-        </InputGroup>
+        
         <br/>
         <InputGroup>
         </InputGroup>
-        <ButtonGroup>
-          <Button className="busBtn" color="primary" onClick={this.busHandleChange} value={this.state.isBus} >Bus</Button>
-          <Button className="planeBtn" color="primary" onClick={this.planeHandleChange} value={this.state.isPlane} >Plane</Button>
-        </ButtonGroup> 
         <br/>
         <ButtonGroup>
-          <Button className="searchBtn" color="primary">Search</Button>
+          <Button className="searchBtn" onClick={this.AddFavorite} color="primary">Search</Button>
         </ButtonGroup> 
 
       </div> 

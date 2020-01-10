@@ -7,39 +7,150 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Text;
+using System.Net.Http.Headers;
 
 namespace GatewayAPI.BusesClient
 {
     public class BusesHttpClient :  IBusesHttpClient
     {
         protected readonly HttpClient client;
+        private readonly string appId = "BusesID";
+        private readonly string appSecret = "BusesSecret";
+        private string accessToken = null;
+        private bool tokenValid = false;
+        private bool appAuthorized = false;
+
+        private string refreshToken = null;
 
         public BusesHttpClient(HttpClient client) : base()
         {
             this.client = client;
 
         }
+        public class TokenInfo
+        {
+            public string token { get; set; }
+            public string refToken { get; set; }
+        }
+        public class AppInfo
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
+
+        }
+
+        private async Task<bool> Auth(AppInfo appInfo)
+        {
+            HttpResponseMessage response;
+            TokenInfo tokenInfo;
+            string urlAuthApp = $"https://localhost:5051/api/accounts/";
+            tokenValid = false;
+            var body = JsonConvert.SerializeObject(appInfo);
+
+
+
+            using (var request = new HttpRequestMessage(HttpMethod.Post, urlAuthApp)
+            {
+                Content = new StringContent(body, Encoding.UTF8, "application/json")
+            })
+
+                response = await client.SendAsync(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+
+                var resultContent = await response.Content.ReadAsStringAsync();
+                tokenInfo = JsonConvert.DeserializeObject<TokenInfo>(resultContent);
+                this.accessToken = tokenInfo.token;
+                this.refreshToken = tokenInfo.refToken;
+                this.tokenValid = true;
+                this.client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", this.accessToken);
+            }
+            return this.tokenValid;
+
+
+
+        }
+
+        private async Task<bool> IsTokenValid(string accessToken)
+        {
+            HttpResponseMessage response;
+
+            string urlAuth = $"https://localhost:5051/api/test";
+
+            tokenValid = false;
+            this.client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var request = new HttpRequestMessage(HttpMethod.Get, urlAuth))
+            {
+                response = await client.SendAsync(request);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    this.tokenValid = true;
+            }
+            return this.tokenValid;
+        }
+
+        private async Task<bool> RefreshToken(string refreshToken)
+        {
+            HttpResponseMessage response;
+            TokenInfo tokenInfo;
+            string urlRefresh = $"https://localhost:5051/api/accounts/{refreshToken}/refresh";
+            tokenValid = false;
+
+            using (var request = new HttpRequestMessage(HttpMethod.Post, urlRefresh))
+            {
+                response = await client.SendAsync(request);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var resultContent = await response.Content.ReadAsStringAsync();
+                    tokenInfo = JsonConvert.DeserializeObject<TokenInfo>(resultContent);
+                    this.accessToken = tokenInfo.token;
+                    this.refreshToken = tokenInfo.refToken;
+                    this.tokenValid = true;
+                    this.client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", this.accessToken);
+                }
+
+
+            }
+            return this.tokenValid;
+
+
+        }
         public async Task<List<Bus>> GetAsync()
         {
             HttpResponseMessage response;
             string url = $"/api/buses/";
-            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-                response = await client.SendAsync(request);
 
-            List<Bus> result;
 
-            var resultContent = await response.Content.ReadAsStringAsync();
+            await Auth(new AppInfo { Username = appId, Password = appSecret });
+            await IsTokenValid(this.accessToken);
 
-            if (response.IsSuccessStatusCode)
+            await RefreshToken(this.refreshToken);
+
+            if (this.tokenValid)
             {
-                result = JsonConvert.DeserializeObject<List<Bus>>(resultContent);
-            }
-            else
-            {
-                throw new Exception("GetAllBuses failed to get");
-            }
 
-            return result;
+                using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                    response = await client.SendAsync(request);
+
+                List<Bus> result;
+
+                var resultContent = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<List<Bus>>(resultContent);
+                }
+                else
+                {
+                    throw new Exception("GetAllBuses failed to get");
+                }
+                return result;
+
+            }
+            throw new Exception("GetAllBuses failed to get");
+
         }
 
         public async Task<Bus> GetIdAsync(long id)

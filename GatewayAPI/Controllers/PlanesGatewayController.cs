@@ -23,6 +23,7 @@ namespace GatewayAPI.Controllers
         private readonly IPlanesHttpClient planesHttpClient;
         private readonly IFavoritesHttpClient favoritesHttpClient;
 
+
         public PlanesGatewayController(IPlanesHttpClient planesHttpClient, IFavoritesHttpClient favoritesHttpClient)
         {
             this.planesHttpClient = planesHttpClient;

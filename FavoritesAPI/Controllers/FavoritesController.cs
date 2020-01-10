@@ -75,6 +75,7 @@ namespace FavoritesAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]Favorites favorite)
         {
+            // Auth
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -121,6 +122,8 @@ namespace FavoritesAPI.Controllers
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Update(string id, [FromBody]Favorites favoriteIn)
         {
+
+            // Auth
             var favorite = await favoritesActions.Get(id);
 
 
@@ -147,6 +150,7 @@ namespace FavoritesAPI.Controllers
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> Delete(string id)
         {
+            // Auth
             var favorite = await favoritesActions.Get(id);
 
             if (favorite == null)

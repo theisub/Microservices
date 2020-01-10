@@ -15,6 +15,11 @@ namespace PlaneAPI.Controllers
     public class PlanesController : ControllerBase
     {
         private readonly IPlaneActions planeActions;
+        private readonly string accessToken = null;
+        private readonly string refreshToken = null;
+
+        private readonly string appId = "PlanesID";
+        private readonly string appSecret = "PlanesSecret";
 
         public PlanesController(IPlaneActions planeActions)
         {
@@ -199,6 +204,8 @@ namespace PlaneAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Plane plane)
         {
+            // Auth
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -239,6 +246,8 @@ namespace PlaneAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Plane plane)
         {
+            // Auth
+
             IActionResult result;
 
             if (!ModelState.IsValid)
@@ -293,6 +302,7 @@ namespace PlaneAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            // Auth
 
             if (!ModelState.IsValid)
             {
@@ -308,7 +318,7 @@ namespace PlaneAPI.Controllers
                 Console.WriteLine("Delete method failed");
                 return NotFound($"Problemes deleting {id}");
             }
-
+             
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("LoggerInfo:");
             Console.ForegroundColor = ConsoleColor.Gray;

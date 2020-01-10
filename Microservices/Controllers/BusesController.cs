@@ -196,6 +196,8 @@ namespace BusAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Bus bus)
         {
+
+            // Auth
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -236,6 +238,7 @@ namespace BusAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Bus bus)
         {
+            // Auth
             IActionResult result;
 
             if (!ModelState.IsValid)
@@ -290,6 +293,7 @@ namespace BusAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            // Auth
 
             if (!ModelState.IsValid)
             {
