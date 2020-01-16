@@ -7,11 +7,14 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace GatewayAPI.PlanesClient
 {
     public class PlanesHttpClient : IPlanesHttpClient
     {
+
+
         private readonly HttpClient client;
         private readonly string appId = "PlanesID";
         private readonly string appSecret = "PlanesSecret";
@@ -23,6 +26,7 @@ namespace GatewayAPI.PlanesClient
         public PlanesHttpClient(HttpClient client) : base()
         {
             this.client = client;
+
             //client.DefaultRequestHeaders.Add("appId", appId);
             //client.DefaultRequestHeaders.Add("appSecret", appSecret);
 
@@ -41,6 +45,25 @@ namespace GatewayAPI.PlanesClient
 
         }
 
+        private async Task<bool> CheckAuth()
+        {
+            if (!appAuthorized)
+            {
+                await Auth(new AppInfo { Username = appId, Password = appSecret });
+                this.appAuthorized = true;
+                this.tokenValid = true;
+            }
+
+            if(this.tokenValid == false)
+                this.tokenValid = await IsTokenValid(this.accessToken);
+           
+
+            if(this.tokenValid == false)
+                await RefreshToken(this.refreshToken);
+
+            return this.tokenValid;
+
+        }
         private async Task<bool> Auth(AppInfo appInfo)
         {
             HttpResponseMessage response;
@@ -123,11 +146,9 @@ namespace GatewayAPI.PlanesClient
         {
             HttpResponseMessage response;
             string url = $"/api/planes/";
+            //string test = response.Headers.GetValues("Authorization").FirstOrDefault();
 
-            await Auth(new AppInfo { Username = appId, Password = appSecret });
-            await IsTokenValid(this.accessToken);
-
-            await RefreshToken(this.refreshToken);
+            await CheckAuth();
 
             if (this.tokenValid)
             {
@@ -149,7 +170,7 @@ namespace GatewayAPI.PlanesClient
                 return result;
             }
 
-            throw new Exception("GetAllPlanes failed to get");
+            throw new Exception("clientApp failed to get");
         }
         public async Task<Plane> GetIdAsync(long id)
         {
@@ -325,89 +346,107 @@ namespace GatewayAPI.PlanesClient
         public async Task<Plane> PostAsync(Plane plane)
         {
 
-            HttpResponseMessage response;
-            string url = $"/api/planes/";
-            var body = JsonConvert.SerializeObject(plane);
+            await CheckAuth();
 
-            try
+            if (this.tokenValid)
             {
-                using (var request = new HttpRequestMessage(HttpMethod.Post, url)
+                HttpResponseMessage response;
+                string url = $"/api/planes/";
+                var body = JsonConvert.SerializeObject(plane);
+
+                try
                 {
-                    Content = new StringContent(body, Encoding.UTF8, "application/json")
-                })
-                    response = await client.SendAsync(request);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("plane failed to be posted");
-            }
+                    using (var request = new HttpRequestMessage(HttpMethod.Post, url)
+                    {
+                        Content = new StringContent(body, Encoding.UTF8, "application/json")
+                    })
+                        response = await client.SendAsync(request);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("plane failed to be posted");
+                }
 
-            var resultContent = await response.Content.ReadAsStringAsync();
-            Plane result;
+                var resultContent = await response.Content.ReadAsStringAsync();
+                Plane result;
 
-            if (response.IsSuccessStatusCode)
-            {
-                result = JsonConvert.DeserializeObject<Plane>(resultContent);
-            }
-            else
-            {
-                throw new Exception("plane failed to be posted");
-            }
+                if (response.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<Plane>(resultContent);
+                }
+                else
+                {
+                    throw new Exception("plane failed to be posted");
+                }
 
-            return result;
+                return result;
+            }
+            throw new Exception("clientApp token not valid");
+
         }
 
         public async Task<Plane> PutAsync(long id, Plane plane)
         {
-            HttpResponseMessage response;
-            string url = $"/api/planes/{id}";
-            var body = JsonConvert.SerializeObject(plane);
-            using (var request = new HttpRequestMessage(HttpMethod.Put, url)
-            {
-                Content = new StringContent(body, Encoding.UTF8, "application/json")
-            })
-                response = await client.SendAsync(request);
 
-            var resultContent = await response.Content.ReadAsStringAsync();
-            Plane result;
-
-            if (response.IsSuccessStatusCode)
+            await CheckAuth();
+            if (this.tokenValid)
             {
-                result = JsonConvert.DeserializeObject<Plane>(resultContent);
+                HttpResponseMessage response;
+                string url = $"/api/planes/{id}";
+                var body = JsonConvert.SerializeObject(plane);
+                using (var request = new HttpRequestMessage(HttpMethod.Put, url)
+                {
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                })
+                    response = await client.SendAsync(request);
+
+                var resultContent = await response.Content.ReadAsStringAsync();
+                Plane result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<Plane>(resultContent);
+                }
+                else
+                {
+                    throw new Exception("Plane failed to be put");
+                }
+
+                return result;
             }
-            else
-            {
-                throw new Exception("Plane failed to be put");
-            }
 
-            return result;
-
+            throw new Exception("clientApp token not valid");
 
         }
 
         public async Task<Plane> DeleteAsync(long id)
         {
-            HttpResponseMessage response;
-            string url = $"/api/planes/{id}";
-
-            var request = new HttpRequestMessage(HttpMethod.Delete, url);
-            
-            response = await client.SendAsync(request);
-
-            var resultContent = await response.Content.ReadAsStringAsync();
-            Plane result;
-
-            if (response.IsSuccessStatusCode)
+            await CheckAuth();
+            if (this.tokenValid)
             {
-                result = JsonConvert.DeserializeObject<Plane>(resultContent);
-            }
-            else
-            {
-                throw new Exception("Plane failed to be deleted");
+                HttpResponseMessage response;
+                string url = $"/api/planes/{id}";
+
+                var request = new HttpRequestMessage(HttpMethod.Delete, url);
+
+                response = await client.SendAsync(request);
+
+                var resultContent = await response.Content.ReadAsStringAsync();
+                Plane result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<Plane>(resultContent);
+                }
+                else
+                {
+                    throw new Exception("Plane failed to be deleted");
+                }
+
+                return result;
             }
 
-            return result;
-
+            throw new Exception("clientApp token not valid");
 
         }
 

@@ -111,12 +111,20 @@ class EditPlane extends React.Component {
   
     };
      
-    await axios.put('https://localhost:44375/api/planesgateway/'+this.props.match.params.id, plane)  
+    var token = localStorage.getItem('accessToken');
+
+    await axios.put('https://localhost:44375/api/planesgateway/'+this.props.match.params.id, plane,{headers:{'Authorization':"Bearer " + token}})  
         .then(res => console.log(res.data)).catch(function (error) { 
             alert(error + " Response code: " + error.response.status);
+            if (error.response.status == 401)
+            {
+                localStorage.removeItem("accessToken");
+                window.location.reload();
+                debugger;
+            };
             debugger;
             console.log(error);  
-          });  
+          })
         debugger;  
         this.props.history.push('/Planeslist')  
   }

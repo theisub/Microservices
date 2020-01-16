@@ -14,6 +14,7 @@ using AutoMapper;
 using BusAPI.Model;
 using PlaneAPI.Model;
 using Hangfire;
+using GatewayAPI.AuthorizationClient;
 
 namespace GatewayAPI.Controllers
 {
@@ -24,14 +25,18 @@ namespace GatewayAPI.Controllers
         private readonly IFavoritesHttpClient favoritesHttpClient;
         private readonly IBusesHttpClient busesHttpClient;
         private readonly IPlanesHttpClient planesHttpClient;
+        private readonly IAuthHttpClient authHttpClient;
+
+
         private readonly IMapper mapper;
         //private readonly QueueManager jobQueue;
 
-        public FavoritesGatewayController(IFavoritesHttpClient favoritesHttpClient, IBusesHttpClient busesHttpClient, IPlanesHttpClient planesHttpClient, IMapper mapper) 
+        public FavoritesGatewayController(IFavoritesHttpClient favoritesHttpClient, IBusesHttpClient busesHttpClient, IPlanesHttpClient planesHttpClient, IMapper mapper, IAuthHttpClient authHttpClient) 
         {
             this.favoritesHttpClient = favoritesHttpClient;
             this.busesHttpClient = busesHttpClient;
             this.planesHttpClient = planesHttpClient;
+            this.authHttpClient = authHttpClient;
             this.mapper = mapper;
             //jobQueue = new QueueManager(favoritesHttpClient,planesHttpClient);
         }
@@ -156,7 +161,7 @@ namespace GatewayAPI.Controllers
                     busesData = new List<Bus>();
             }
 
-            if (isPlaneActive && isBusActive)
+            if (isPlaneActive==false && isBusActive==false)
             {
                 result = StatusCode(StatusCodes.Status500InternalServerError);
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -184,11 +189,7 @@ namespace GatewayAPI.Controllers
 
 
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("LoggerInfo:");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("Very important info");
-
+           
             try
             {
                 var entity = newFavorite;
@@ -311,7 +312,16 @@ namespace GatewayAPI.Controllers
         [HttpPost("AddPlaneAndFavorite", Name = "PostPlanesFavoriteGatewayAll")]
         public async Task<IActionResult> PostPlanesFavorite([FromBody] Plane plane)
         {
-            //https://localhost:44375/api/favoritesgateway/addfavorite?incity=Moscow&outcity=Berlin
+            string test = Request.Headers["Authorization"];
+            //TokenInfo tokenInfo = await authHttpClient.Auth(new AppInfo { Username=appId, Password = appSecret});
+            if (test != null)
+            {
+                string accessTokenFromHeader = test.Substring(6);
+                bool isAuthorized = await authHttpClient.IsTokenValid(accessTokenFromHeader);
+                if (!isAuthorized)
+                    return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -416,6 +426,16 @@ namespace GatewayAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] Favorites ravorite)
         {
+            string test = Request.Headers["Authorization"];
+            //TokenInfo tokenInfo = await authHttpClient.Auth(new AppInfo { Username=appId, Password = appSecret});
+            if (test != null)
+            {
+                string accessTokenFromHeader = test.Substring(6);
+                bool isAuthorized = await authHttpClient.IsTokenValid(accessTokenFromHeader);
+                if (!isAuthorized)
+                    return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -460,6 +480,15 @@ namespace GatewayAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            string test = Request.Headers["Authorization"];
+            //TokenInfo tokenInfo = await authHttpClient.Auth(new AppInfo { Username=appId, Password = appSecret});
+            if (test != null)
+            {
+                string accessTokenFromHeader = test.Substring(6);
+                bool isAuthorized = await authHttpClient.IsTokenValid(accessTokenFromHeader);
+                if (!isAuthorized)
+                    return Unauthorized();
+            }
 
             if (!ModelState.IsValid)
             {

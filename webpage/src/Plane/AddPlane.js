@@ -15,8 +15,9 @@ this.state = {
   Price: 0,
   travelTime: 0,
   Transit:false,
+  token:'',
 
-
+  
 
 
   formErrors: 
@@ -27,39 +28,51 @@ this.state = {
     inCityValid:false,
     outCityValid:false
   }  
-}   
+}
+   
 AddPlane=()=>{
-  debugger;  
+  //debugger;
+  var token = localStorage.getItem('accessToken');  
   axios.post('https://localhost:44375/api/planesgateway', 
   {planeCompany:this.state.planeCompany,inCountry:this.state.inCountry,outCountry:this.state.outCountry,   
-    inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit})  
+    inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit},{headers:{'Authorization':"Bearer " + token}})  
 .then(json => {  
 if(json.status===201){  
   console.log(json.status);  
   debugger;
   alert("Data Save Successfully." + json.statusText + ". Status code: " + json.status);  
-  this.props.history.push('/Buslist')  
+  this.props.history.push('/Planeslist')  
 }  
 else{  
-alert('Data is not saved!' + json.statusText + "Status code: " + json.status);  
+alert('Data is not saved!' + json.statusText + "Status code: " + json.status);
+
 debugger;
 console.log(json.data.Status);  
-this.props.history.push('/Buslist')  
+this.props.history.push('/Planeslist')  
 }  
 })
 .catch(function (error) { 
   alert(error + " Response code: " + error.response.status);
+  if (error.response.status == 401)
+  {
+        localStorage.removeItem("accessToken");
+        window.location.reload();
+    debugger;
+  };
   debugger;
   console.log(error);  
 }
 )    
 }
 
+
+
 AddPlaneAndFavorite=()=>{
+  var token = localStorage.getItem('accessToken');
   debugger;  
   axios.post('https://localhost:44375/api/favoritesgateway/AddPlaneAndFavorite/', 
   {planeCompany:this.state.planeCompany,inCountry:this.state.inCountry,outCountry:this.state.outCountry,   
-    inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit})  
+    inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit},{headers:{'Authorization':"Bearer " + token}})  
 .then(json => {  
 if(json.status===200){  
   console.log(json.data.Status);  
@@ -69,9 +82,19 @@ this.props.history.push('/Planeslist')
 else{  
 alert('Data saved!');  
 debugger;  
-this.props.history.push('/Planelist')  
+this.props.history.push('/Planeslist')  
 }  
-})  
+}).catch(function (error) { 
+  alert(error + " Response code: " + error.response.status);
+  if (error.response.status == 401)
+  {
+    localStorage.removeItem("accessToken");
+    window.location.reload();
+        debugger;
+  };
+  debugger;
+  console.log(error);  
+})
 }  
 
 handleUserInput= (e)=> {
@@ -88,7 +111,7 @@ validateField=(fieldName, value)=> {
   let outCountryValid = this.state.outCountryValid;
   let inCityValid = this.state.inCityValid;
   let outCityValid = this.state.outCityValid;
-  debugger;
+  //debugger;
   switch(fieldName) {
     case 'planeCompany':
       planeCompanyValid = value.length >= 2;

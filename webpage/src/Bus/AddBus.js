@@ -28,9 +28,11 @@ this.state = {
 }   
 AddBus=()=>{
   //debugger;  
+  var token = localStorage.getItem('accessToken');
+
   axios.post('https://localhost:44375/api/busesgateway', 
   {busCompany:this.state.busCompany,inCountry:this.state.inCountry,outCountry:this.state.outCountry,   
-    inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit})  
+    inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit},{headers:{'Authorization':"Bearer " + token}})  
 .then(json => {  
 if(json.status===201){  
   console.log(json.status);  
@@ -47,16 +49,24 @@ this.props.history.push('/Buslist')
 })
 .catch(function (error) { 
   alert(error + " Response code: " + error.response.status);
+  if (error.response.status == 401)
+  {
+    localStorage.removeItem("accessToken");
+    window.location.reload();
+    debugger;
+  };
   debugger;
   console.log(error);  
-})    
+})
 }
 
 AddBusAndFavorite=()=>{
-  //debugger;  
+  //debugger;
+  var token = localStorage.getItem('accessToken');
+  
   axios.post('https://localhost:44375/api/favoritesgateway/AddBusAndFavorite/', 
   {busCompany:this.state.busCompany,inCountry:this.state.inCountry,outCountry:this.state.outCountry,   
-    inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit})  
+    inCity:this.state.inCity,outCity:this.state.outCity,Price:this.state.Price, travelTime:this.state.travelTime,Transit: this.state.Transit},{headers:{'Authorization':"Bearer " + token}})  
 .then(json => {  
 if(json.status===200){  
   console.log(json.data.Status);  
@@ -70,6 +80,16 @@ console.log(json.data.Status);
   
 this.props.history.push('/Buslist')  
 }  
+}).catch(function (error) { 
+  alert(error + " Response code: " + error.response.status);
+  if (error.response.status == 401)
+  {
+    localStorage.removeItem("accessToken");
+    window.location.reload();
+        debugger;
+  };
+  debugger;
+  console.log(error);  
 })  
 }  
 

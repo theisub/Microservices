@@ -28,7 +28,9 @@ export default class SearchPage extends Component {
 
     AddFavorite=()=>{
       //debugger;  
-      axios.post('https://localhost:44375/api/favoritesgateway/addfavorite?incity='+this.state.inCity+'&outCity='+this.state.outCity)  
+      var token = localStorage.getItem('accessToken');
+
+      axios.post('https://localhost:44375/api/favoritesgateway/addfavorite?incity='+this.state.inCity+'&outCity='+this.state.outCity,{headers:{'Authorization':"Bearer " + token}})  
     .then(json => {  
     if(json.status===200){  
       console.log(json.data.Status);  
@@ -42,6 +44,16 @@ export default class SearchPage extends Component {
       
     this.props.history.push('/Buslist')  
     }  
+    }).catch(function (error) { 
+      alert(error + " Response code: " + error.response.status);
+      if (error.response.status == 401)
+      {
+        localStorage.removeItem("accessToken");
+        window.location.reload();
+        debugger;
+      };
+      debugger;
+      console.log(error);  
     })  
     }  
     

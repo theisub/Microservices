@@ -10,18 +10,18 @@ export default class PlanesList extends Component {
   
   constructor(props) {  
       super(props);  
-      this.state = {business: [], current:1, dataCount:1,pageSize:5};  
+      this.state = {business: [], current:1, dataCount:1,pageSize:5 };  
     }  
     componentDidMount(){  
       //axios.get('https://localhost:44375/api/busesgateway/companies/FrenchTour?pageSize='+this.state.pageSize+'&pageNum='+this.state.current)  
-
+      
       axios.get('https://localhost:44375/api/planesgateway/')  
         .then(response => {  
           this.setState({ business: response.data, dataCount: response.data.length});  
           //debugger;  
         })  
         .catch(function (error) {  
-          alert(error); 
+          //alert(error); 
           console.log(error);  
         })  
     }

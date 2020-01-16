@@ -22,6 +22,8 @@ using Polly.CircuitBreaker;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
+using GatewayAPI.AuthorizationClient;
+using Polly.Extensions.Http;
 
 namespace GatewayAPI
 {
@@ -34,12 +36,14 @@ namespace GatewayAPI
 
         public IConfiguration Configuration { get; }
 
-     
+        
+
+        
 
         private void OnHalfOpen()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Circuit in test mode, one request will be allowed.");
+            //Console.WriteLine("Circuit in test mode, one request will be allowed.");
             Console.ForegroundColor = ConsoleColor.Gray;
 
         }
@@ -47,7 +51,7 @@ namespace GatewayAPI
         private void OnReset()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Circuit closed, requests flow normally.");
+            Console.WriteLine("\n\n\n\n CIRCUIT IS OPEN!!!! \n\n\n\n");
             Console.ForegroundColor = ConsoleColor.Gray;
 
         }
@@ -55,7 +59,8 @@ namespace GatewayAPI
         private void OnBreak(DelegateResult<HttpResponseMessage> result, TimeSpan ts)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Circuit cut, requests will not flow.");
+            
+            Console.WriteLine("\n\n\n\n CIRCUIT IS OPEN!!!! \n\n\n\n");
             Console.ForegroundColor = ConsoleColor.Gray;
 
         }
@@ -65,28 +70,33 @@ namespace GatewayAPI
         {
 
             services.AddControllers();
-            
-            services.AddAutoMapper(typeof(Mapping.MappingProfile));
-            services.AddHangfire(x => x.UseSqlServerStorage("Data Source=BASEM-œ \\SQLEXPRESS;Initial Catalog=TestJob;Integrated Security=True;Pooling=False"));
 
-            var basicCircuitBreakerPolicy = Policy
-            .HandleResult<HttpResponseMessage>(r => r.StatusCode == System.Net.HttpStatusCode.BadRequest)
-            .CircuitBreakerAsync(2, TimeSpan.FromSeconds(30), OnBreak, OnReset, OnHalfOpen);
+            services.AddAutoMapper(typeof(Mapping.MappingProfile));
+            //services.AddHangfire(x => x.UseSqlServerStorage("Data Source=BASEM-–ü–ö\\SQLEXPRESS;Initial Catalog=TestJob;Integrated Security=True;Pooling=False"));
+            services.AddHangfire(x => x.UseSqlServerStorage("Server=localhost;Database=TestJob;User Id=sa;Password=Mypassword123;"));
 
             services.AddHttpClient<IBusesHttpClient, BusesHttpClient>(client =>
            {
                client.BaseAddress = new Uri("https://localhost:44331/");
-           }).AddPolicyHandler(basicCircuitBreakerPolicy);
+           }).AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(3,TimeSpan.FromSeconds(20)));
 
             services.AddHttpClient<IPlanesHttpClient, PlanesHttpClient>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44361/");
-            }).AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15), OnBreak, OnReset, OnHalfOpen)).AddTransientHttpErrorPolicy(f => f.FallbackAsync(new HttpResponseMessage(System.Net.HttpStatusCode.NotFound)));
+            }).AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(3, TimeSpan.FromSeconds(20)));
+            //.AddTransientHttpErrorPolicy(f => f.FallbackAsync(new HttpResponseMessage(System.Net.HttpStatusCode.NotFound)));
+
+            //.HandleTransientHttpError()
 
             services.AddHttpClient<IFavoritesHttpClient, FavoritesHttpClient>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44357/");
-            });//.AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(2, TimeSpan.FromSeconds(15)));
+            }).AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(3, TimeSpan.FromSeconds(20)));
+            services.AddHttpClient<IAuthHttpClient, AuthHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:5051/");
+            });
+
             services.AddCors();
 
             services.AddHangfireServer();

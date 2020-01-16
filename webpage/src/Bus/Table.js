@@ -9,7 +9,9 @@ class Table extends Component {
     
      DeleteBus= async () =>{
     debugger;
-     await axios.delete('https://localhost:44375/api/busesGateway/'+this.props.obj.id)  
+    var token = localStorage.getItem('accessToken');
+
+     await axios.delete('https://localhost:44375/api/busesGateway/'+this.props.obj.id,{headers:{'Authorization':"Bearer " + token}})  
     .then(resp => { 
       debugger; 
     if(resp.status===202){  
@@ -24,9 +26,15 @@ class Table extends Component {
     }  
     }).catch(function (error) { 
       alert(error + " Response code: " + error.response.status);
+      if (error.response.status == 401)
+      {
+        localStorage.removeItem("accessToken");
+        window.location.reload();
+        debugger;
+      };
       debugger;
       console.log(error);  
-    })    
+    })
     }
     
   render() {  

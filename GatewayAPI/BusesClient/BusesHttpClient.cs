@@ -39,6 +39,25 @@ namespace GatewayAPI.BusesClient
 
         }
 
+        private async Task<bool> CheckAuth()
+        {
+            if (!appAuthorized)
+            {
+                await Auth(new AppInfo { Username = appId, Password = appSecret });
+                this.appAuthorized = true;
+                this.tokenValid = true;
+            }
+
+            if (this.tokenValid == false)
+                this.tokenValid = await IsTokenValid(this.accessToken);
+
+
+            if (this.tokenValid == false)
+                await RefreshToken(this.refreshToken);
+
+            return this.tokenValid;
+
+        }
         private async Task<bool> Auth(AppInfo appInfo)
         {
             HttpResponseMessage response;
@@ -311,8 +330,9 @@ namespace GatewayAPI.BusesClient
                 }
 
             }
+            throw new Exception("clientApp token not valid");
 
-            
+
         }
 
 
@@ -321,81 +341,98 @@ namespace GatewayAPI.BusesClient
 
         public async Task<Bus> PostAsync(Bus dto)
         {
-
-            HttpResponseMessage response;
-            string url = $"/api/buses/";
-            var body = JsonConvert.SerializeObject(dto);
-            using (var request = new HttpRequestMessage(HttpMethod.Post, url)
+            await CheckAuth();
+            if (this.tokenValid)
             {
-                Content = new StringContent(body, Encoding.UTF8, "application/json")
-            })
-                response = await client.SendAsync(request);
+                HttpResponseMessage response;
+                string url = $"/api/buses/";
+                var body = JsonConvert.SerializeObject(dto);
+                using (var request = new HttpRequestMessage(HttpMethod.Post, url)
+                {
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                })
+                    response = await client.SendAsync(request);
 
-            var resultContent = await response.Content.ReadAsStringAsync();
-            Bus result;
+                var resultContent = await response.Content.ReadAsStringAsync();
+                Bus result;
 
-            if (response.IsSuccessStatusCode)
-            {
-                result = JsonConvert.DeserializeObject<Bus>(resultContent);
+                if (response.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<Bus>(resultContent);
+                }
+                else
+                {
+                    throw new Exception("Bus failed to be posted");
+                }
+
+                return result;
             }
-            else
-            {                
-                throw new Exception("Bus failed to be posted");
-            }
+            throw new Exception("clientApp token not valid");
 
-            return result;
         }
 
         public async Task<Bus> PutAsync(long id, Bus bus)
         {
-            HttpResponseMessage response;
-            string url = $"/api/buses/{id}";
-            var body = JsonConvert.SerializeObject(bus);
-            using (var request = new HttpRequestMessage(HttpMethod.Put, url)
+            await CheckAuth();
+            if (this.tokenValid)
             {
-                Content = new StringContent(body, Encoding.UTF8, "application/json")
-            })
-                response = await client.SendAsync(request);
+                HttpResponseMessage response;
+                string url = $"/api/buses/{id}";
+                var body = JsonConvert.SerializeObject(bus);
+                using (var request = new HttpRequestMessage(HttpMethod.Put, url)
+                {
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                })
+                    response = await client.SendAsync(request);
 
-            var resultContent = await response.Content.ReadAsStringAsync();
-            Bus result;
+                var resultContent = await response.Content.ReadAsStringAsync();
+                Bus result;
 
-            if (response.IsSuccessStatusCode)
-            {
-                result = JsonConvert.DeserializeObject<Bus>(resultContent);
+                if (response.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<Bus>(resultContent);
+                }
+                else
+                {
+                    throw new Exception("Plane failed to be put");
+                }
+
+                return result;
             }
-            else
-            {
-                throw new Exception("Plane failed to be put");
-            }
+            throw new Exception("clientApp token not valid");
 
-            return result;
 
 
         }
 
         public async Task<Bus> DeleteAsync(long id)
         {
-            HttpResponseMessage response;
-            string url = $"/api/buses/{id}";
-
-            var request = new HttpRequestMessage(HttpMethod.Delete, url);
-
-            response = await client.SendAsync(request);
-
-            var resultContent = await response.Content.ReadAsStringAsync();
-            Bus result;
-
-            if (response.IsSuccessStatusCode)
+            await CheckAuth();
+            if (this.tokenValid)
             {
-                result = JsonConvert.DeserializeObject<Bus>(resultContent);
-            }
-            else
-            {
-                throw new Exception("Bus failed to be deleted");
-            }
+                HttpResponseMessage response;
+                string url = $"/api/buses/{id}";
 
-            return result;
+                var request = new HttpRequestMessage(HttpMethod.Delete, url);
+
+                response = await client.SendAsync(request);
+
+                var resultContent = await response.Content.ReadAsStringAsync();
+                Bus result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<Bus>(resultContent);
+                }
+                else
+                {
+                    throw new Exception("Bus failed to be deleted");
+                }
+
+                return result;
+            }
+            throw new Exception("clientApp token not valid");
+
 
 
         }

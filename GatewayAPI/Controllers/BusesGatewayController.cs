@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using GatewayAPI.FavoritesClient;
 using FavoritesAPI.Model;
+using GatewayAPI.AuthorizationClient;
 
 namespace GatewayAPI.Controllers
 {
@@ -20,13 +21,20 @@ namespace GatewayAPI.Controllers
     {
         private readonly IBusesHttpClient busesHttpClient;
         private readonly IFavoritesHttpClient favoritesHttpClient;
+        private readonly IAuthHttpClient authHttpClient;
+        private readonly string appId = "PlanesID";
+        private readonly string appSecret = "PlanesSecret";
+        private string accessToken = null;
+        private bool tokenValid = false;
+        private string refreshToken = null;
 
 
 
-        public BusesGatewayController(IBusesHttpClient busesHttpClient, IFavoritesHttpClient favoritesHttpClient)
+        public BusesGatewayController(IBusesHttpClient busesHttpClient, IFavoritesHttpClient favoritesHttpClient, IAuthHttpClient authHttpClient)
         {
             this.favoritesHttpClient = favoritesHttpClient;
             this.busesHttpClient = busesHttpClient;
+            this.authHttpClient = authHttpClient;
 
         }
         // GET: api/BusesGateway
@@ -193,6 +201,13 @@ namespace GatewayAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Bus bus)
         {
+            string test = Request.Headers["Authorization"];
+            //TokenInfo tokenInfo = await authHttpClient.Auth(new AppInfo { Username=appId, Password = appSecret});
+            string accessTokenFromHeader = test.Substring(6);
+            bool isAuthorized = await authHttpClient.IsTokenValid(accessTokenFromHeader);
+            if (!isAuthorized)
+                return Unauthorized();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -230,6 +245,13 @@ namespace GatewayAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Bus plane)
         {
+            string test = Request.Headers["Authorization"];
+            //TokenInfo tokenInfo = await authHttpClient.Auth(new AppInfo { Username=appId, Password = appSecret});
+            string accessTokenFromHeader = test.Substring(6);
+            bool isAuthorized = await authHttpClient.IsTokenValid(accessTokenFromHeader);
+            if (!isAuthorized)
+                return Unauthorized();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -269,6 +291,12 @@ namespace GatewayAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            string test = Request.Headers["Authorization"];
+            //TokenInfo tokenInfo = await authHttpClient.Auth(new AppInfo { Username=appId, Password = appSecret});
+            string accessTokenFromHeader = test.Substring(6);
+            bool isAuthorized = await authHttpClient.IsTokenValid(accessTokenFromHeader);
+            if (!isAuthorized)
+                return Unauthorized();
 
             if (!ModelState.IsValid)
             {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';  
+import {Redirect} from 'react-router-dom';
 import axios from 'axios';  
 import Table from './Table';
 import Pagination from 'rc-pagination';
@@ -14,6 +15,8 @@ export default class BusList extends Component {
     }  
     componentDidMount(){  
       //axios.get('https://localhost:44375/api/busesgateway/companies/FrenchTour?pageSize='+this.state.pageSize+'&pageNum='+this.state.current)  
+      //localStorage.clear();
+      
 
       axios.get('https://localhost:44375/api/busesgateway/')  
         .then(response => {  
@@ -22,8 +25,12 @@ export default class BusList extends Component {
         })  
         .catch(function (error) { 
           alert(error); 
+          debugger;
           console.log(error);  
-        })  
+        }) 
+        debugger;
+        //this.props.history.push('/');
+        //window.location.reload();
     }
     
     
